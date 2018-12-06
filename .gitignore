@@ -1,0 +1,9 @@
+# Editor project files
+.idea/
+.vscode/
+
+# Rust artifacts
+target/
+
+# Python virtualenv
+.env/
