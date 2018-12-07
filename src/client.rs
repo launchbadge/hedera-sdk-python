@@ -13,6 +13,10 @@ pub struct PyClient {
 
 #[pymethods]
 impl PyClient {
+    /// __new__(address: str)
+    /// --
+    ///
+    /// Establish a new connection to the Hedera API.
     #[new]
     pub fn __new__(obj: &PyRawObject, address: String) -> PyResult<()> {
         let client = Client::new(&address).map_err(PyValueError)?;
@@ -21,6 +25,10 @@ impl PyClient {
         })
     }
 
+    /// account(self, id: str) -> PartialAccountMessage
+    /// --
+    ///
+    /// Access available operations on a single crypto-currency account.
     pub fn account(&self, id: String) -> PyResult<PyPartialAccountMessage> {
         Ok(PyPartialAccountMessage {
             client: Rc::clone(&self.inner),
@@ -28,6 +36,10 @@ impl PyClient {
         })
     }
 
+    /// transaction(self, id: str) -> PartialTransactionMessage
+    /// --
+    ///
+    /// Access available operations on a single transaction.
     pub fn transaction(&self, id: String) -> PyResult<PyPartialTransactionMessage> {
         Ok(PyPartialTransactionMessage {
             client: Rc::clone(&self.inner),
@@ -35,6 +47,10 @@ impl PyClient {
         })
     }
 
+    /// file(self, id: str) -> PartialFileMessage
+    /// --
+    ///
+    /// Access available operations on a single file.
     pub fn file(&self, id: String) -> PyResult<PyPartialFileMessage> {
         Ok(PyPartialFileMessage {
             client: Rc::clone(&self.inner),
@@ -51,6 +67,13 @@ pub struct PyPartialAccountMessage {
 
 #[pymethods]
 impl PyPartialAccountMessage {
+    /// balance(self) -> QueryCryptoGetAccountBalance
+    /// --
+    ///
+    /// Get the balance of a crypto-currency account.
+    ///
+    /// This returns only the balance, so it is a smaller and faster reply than
+    /// :py:method:`hedera.PartialAccountMessage.info`.
     pub fn balance(&self) -> PyResult<PyQueryCryptoGetAccountBalance> {
         Ok(PyQueryCryptoGetAccountBalance::new(
             &self.client,
@@ -67,6 +90,13 @@ pub struct PyPartialTransactionMessage {
 
 #[pymethods]
 impl PyPartialTransactionMessage {
+    /// receipt(self) -> QueryGetTransactionReceipt
+    /// --
+    ///
+    /// Get the receipt of the transaction.
+    ///
+    /// Once a transaction reaches consensus, then information about whether it succeeded or
+    /// failed will be available until the end of the receipt period (180 seconds).
     pub fn receipt(&self) -> PyResult<PyQueryGetTransactionReceipt> {
         Ok(PyQueryGetTransactionReceipt::new(
             &self.client,
