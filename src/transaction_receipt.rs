@@ -1,4 +1,4 @@
-use hedera::transaction::TransactionReceipt;
+use hedera::TransactionReceipt;
 use pyo3::prelude::*;
 
 #[pyclass(name = TransactionReceipt)]
