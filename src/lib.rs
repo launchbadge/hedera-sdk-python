@@ -1,7 +1,6 @@
 #![feature(specialization)]
 #![warn(clippy::pedantic)]
 #![allow(clippy::stutter)]
-
 // todo: file an issue in pyo3 about this
 #![allow(clippy::cast_ptr_alignment)]
 
