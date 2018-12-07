@@ -58,7 +58,7 @@ impl PyFileInfo {
     }
 
     #[getter]
-    pub fn keys(&mut self) -> PyResult<String> {
+    pub fn keys(&mut self) -> PyResult<Vec<String>> {
         Ok(self.inner.keys.iter().map(|key| key.to_string()).collect())
     }
 
