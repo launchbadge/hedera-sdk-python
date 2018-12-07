@@ -1,7 +1,7 @@
 use super::{errors::PyException, transaction_receipt::PyTransactionReceipt};
 use hedera::{
     query::{Query, QueryGetTransactionReceipt},
-    transaction::TransactionReceipt,
+    TransactionReceipt,
     Client, TransactionId,
 };
 use pyo3::prelude::*;
