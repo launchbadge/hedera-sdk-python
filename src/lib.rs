@@ -1,4 +1,9 @@
 #![feature(specialization)]
+#![warn(clippy::pedantic)]
+#![allow(clippy::stutter)]
+
+// todo: file an issue in pyo3 about this
+#![allow(clippy::cast_ptr_alignment)]
 
 mod client;
 mod errors;
@@ -10,9 +15,7 @@ mod query_get_transaction_receipt;
 mod timestamp;
 mod transaction_receipt;
 
-use self::client::*;
-use self::query_crypto_get_account_balance::*;
-use self::query_get_transaction_receipt::*;
+use self::{client::*, query_crypto_get_account_balance::*, query_get_transaction_receipt::*};
 use pyo3::prelude::*;
 
 #[pymodinit]

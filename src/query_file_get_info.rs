@@ -1,11 +1,10 @@
+use super::timestamp::py_date_time;
+use crate::errors::PyException;
 use hedera::{
     query::{Query, QueryFileGetInfo, QueryFileGetInfoResponse},
     Client, FileId,
 };
-use super::timestamp::py_date_time;
-use pyo3::prelude::*;
-use pyo3::types::PyDateTime;
-use crate::errors::PyException;
+use pyo3::{prelude::*, types::PyDateTime};
 
 #[pyclass(name = QueryFileGetInfo)]
 pub struct PyQueryFileGetInfo {
@@ -30,9 +29,7 @@ impl PyQueryFileGetInfo {
     pub fn get(&mut self) -> PyResult<PyFileInfo> {
         let response = self.inner.get().map_err(PyException)?;
 
-        Ok(PyFileInfo {
-            inner: response
-        })
+        Ok(PyFileInfo { inner: response })
     }
 
     pub fn cost(&mut self) -> PyResult<u64> {
@@ -66,4 +63,3 @@ impl PyFileInfo {
         py_date_time(self.inner.expiration_time, py)
     }
 }
-

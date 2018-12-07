@@ -13,14 +13,10 @@ pub struct PyClient {
 
 #[pymethods]
 impl PyClient {
-    /// __new__(address: str)
-    /// --
-    ///
-    /// Establish a new connection to the Hedera API.
     #[new]
-    pub fn __new__(obj: &PyRawObject, address: String) -> PyResult<()> {
-        let client = Client::new(&address).map_err(PyValueError)?;
-        obj.init(move |_| PyClient {
+    pub fn __new__(obj: &PyRawObject, address: &str) -> PyResult<()> {
+        let client = Client::new(address).map_err(PyValueError)?;
+        obj.init(move |_| Self {
             inner: Rc::new(client),
         })
     }
@@ -29,7 +25,7 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single crypto-currency account.
-    pub fn account(&self, id: String) -> PyResult<PyPartialAccountMessage> {
+    pub fn account(&self, id: &str) -> PyResult<PyPartialAccountMessage> {
         Ok(PyPartialAccountMessage {
             client: Rc::clone(&self.inner),
             account: id.parse().map_err(PyValueError)?,
@@ -40,7 +36,7 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single transaction.
-    pub fn transaction(&self, id: String) -> PyResult<PyPartialTransactionMessage> {
+    pub fn transaction(&self, id: &str) -> PyResult<PyPartialTransactionMessage> {
         Ok(PyPartialTransactionMessage {
             client: Rc::clone(&self.inner),
             transaction: id.parse().map_err(PyValueError)?,
@@ -51,7 +47,7 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single file.
-    pub fn file(&self, id: String) -> PyResult<PyPartialFileMessage> {
+    pub fn file(&self, id: &str) -> PyResult<PyPartialFileMessage> {
         Ok(PyPartialFileMessage {
             client: Rc::clone(&self.inner),
             file: id.parse().map_err(PyValueError)?,
@@ -114,6 +110,6 @@ pub struct PyPartialFileMessage {
 #[pymethods]
 impl PyPartialFileMessage {
     pub fn contents(&self) -> PyResult<PyQueryFileGetContents> {
-        Ok(PyQueryFileGetContents::new(&self.client, self.file.clone()))
+        Ok(PyQueryFileGetContents::new(&self.client, self.file))
     }
 }
