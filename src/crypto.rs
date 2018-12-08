@@ -1,5 +1,5 @@
 use super::errors::PyValueError;
-use hedera::PublicKey;
+use hedera::{PublicKey, SecretKey};
 use pyo3::prelude::*;
 
 #[pyclass(name = PublicKey)]
@@ -17,3 +17,10 @@ impl PyPublicKey {
 }
 
 def_str!(PyPublicKey);
+
+#[pyclass(name = SecretKey)]
+pub struct PySecretKey {
+    inner: SecretKey,
+}
+
+def_str!(PySecretKey);
