@@ -8,11 +8,14 @@
 mod macros;
 
 mod client;
+mod contract_info;
 mod crypto;
 mod errors;
 mod id;
 mod query_contract_get_bytecode;
+mod query_contract_get_info;
 mod query_crypto_get_account_balance;
+mod query_crypto_get_info;
 mod query_file_get_contents;
 mod query_file_get_info;
 mod query_get_transaction_receipt;

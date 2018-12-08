@@ -2,11 +2,13 @@ use super::{
     errors::PyValueError, query_crypto_get_account_balance::*, query_file_get_contents::*,
     query_get_transaction_receipt::*,
 };
-use crate::id::{PyAccountId, PyFileId};
+use crate::{
+    id::{PyAccountId, PyFileId},
+    transaction_id::PyTransactionId,
+};
 use hedera::{AccountId, Client, FileId, TransactionId};
 use pyo3::prelude::*;
 use std::rc::Rc;
-use crate::transaction_id::PyTransactionId;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
