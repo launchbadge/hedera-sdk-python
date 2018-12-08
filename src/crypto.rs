@@ -1,10 +1,10 @@
 use super::errors::PyValueError;
-use hedera::{PublicKey, SecretKey};
+use hedera::{PublicKey, SecretKey, Signature};
 use pyo3::prelude::*;
 
 #[pyclass(name = PublicKey)]
 pub struct PyPublicKey {
-    inner: PublicKey,
+    pub(crate) inner: PublicKey,
 }
 
 #[pymethods]
@@ -20,7 +20,14 @@ def_str!(PyPublicKey);
 
 #[pyclass(name = SecretKey)]
 pub struct PySecretKey {
-    inner: SecretKey,
+    pub(crate) inner: SecretKey,
 }
 
 def_str!(PySecretKey);
+
+#[pyclass(name = Signature)]
+pub struct PySignature {
+    pub(crate) inner: Signature,
+}
+
+def_str!(PySignature);

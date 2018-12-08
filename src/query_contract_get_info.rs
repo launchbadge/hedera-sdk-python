@@ -8,7 +8,7 @@ use pyo3::prelude::*;
 
 #[pyclass(name = QueryContractGetInfo)]
 pub struct PyQueryContractGetInfo {
-    inner: Query<ContractInfo>,
+    pub(crate) inner: Query<ContractInfo>,
 }
 
 impl PyQueryContractGetInfo {
