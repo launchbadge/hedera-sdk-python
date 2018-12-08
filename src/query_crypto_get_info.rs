@@ -1,14 +1,14 @@
 use super::{errors::PyException, timestamp::py_date_time};
 use hedera::{
-    Claim,
     query::{Query, QueryCryptoGetInfo},
-    AccountInfo,
-    PublicKey,
-    Client, AccountId,
+    AccountId, AccountInfo, Claim, Client, PublicKey,
 };
 
-use pyo3::prelude::*;
-use pyo3::types::{PyDateTime, PyDelta};
+use crate::crypto::PyPublicKey;
+use pyo3::{
+    prelude::*,
+    types::{PyDateTime, PyDelta},
+};
 
 #[pyclass(name = QueryCryptoGetInfo)]
 pub(crate) struct PyQueryCryptoGetInfo {
@@ -75,7 +75,9 @@ impl PyAccountInfo {
 
     #[getter]
     fn key(&self) -> PyResult<PyPublicKey> {
-        Ok(PyPublicKey { inner: self.inner.key.clone() })
+        Ok(PyPublicKey {
+            inner: self.inner.key.clone(),
+        })
     }
 
     #[getter]
@@ -98,46 +100,35 @@ impl PyAccountInfo {
         Ok(self.inner.receiver_signature_required as bool)
     }
 
-
     fn get_expiration_time(&self, py: Python) -> PyResult<Py<PyDateTime>> {
-        Ok(py_date_time(self.inner.expiration_time, py)?)
+        py_date_time(self.inner.expiration_time, py)
     }
-
 
     fn get_auto_renew_period(&self, py: Python) -> PyResult<Py<PyDelta>> {
         let renew_period = self.inner.auto_renew_period;
         let seconds = renew_period.as_secs() as i32;
         let microseconds = renew_period.subsec_micros() as i32;
 
-        Ok(PyDelta::new(
-            py,
-            0,
-            seconds,
-            microseconds,
-            false
-        )?)
+        PyDelta::new(py, 0, seconds, microseconds, false)
     }
 
     #[getter]
     fn claims(&self) -> PyResult<Vec<PyClaim>> {
-        let claims = self.inner.claims.clone().into_iter().map(|claim| {
-            PyClaim {
-                inner: claim
-            }
-        }).collect();
+        let claims = self
+            .inner
+            .claims
+            .clone()
+            .into_iter()
+            .map(|claim| PyClaim { inner: claim })
+            .collect();
 
         Ok(claims)
     }
 }
 
-#[pyclass(name = PublicKey)]
-pub struct PyPublicKey{
-    inner: PublicKey
-}
-
 #[pyclass(name = Claim)]
 pub struct PyClaim {
-    inner: Claim
+    inner: Claim,
 }
 
 #[pymethods]
@@ -154,12 +145,13 @@ impl PyClaim {
 
     #[getter]
     pub fn keys(&self) -> PyResult<Vec<PyPublicKey>> {
-        let keys = self.inner.keys.clone().into_iter().map(|key| {
-            PyPublicKey {
-                inner: key
-            }
-        }).collect();
+        let keys = self
+            .inner
+            .keys
+            .clone()
+            .into_iter()
+            .map(|key| PyPublicKey { inner: key })
+            .collect();
         Ok(keys)
     }
-
 }
