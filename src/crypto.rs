@@ -1,4 +1,4 @@
-use super::errors::PyException;
+use super::errors::PyValueError;
 use hedera::PublicKey;
 use pyo3::prelude::*;
 
@@ -10,8 +10,8 @@ pub struct PyPublicKey {
 #[pymethods]
 impl PyPublicKey {
     #[new]
-    pub fn __new__(obj: &PyRawObject, bytes: &str) -> PyResult<()> {
-        let key = PublicKey::from_bytes(bytes).map_err(PyException)?;
+    pub fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
+        let key = PublicKey::from_bytes(s).map_err(PyValueError)?;
         obj.init(|_| Self { inner: key })
     }
 }
