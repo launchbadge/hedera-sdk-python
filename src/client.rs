@@ -2,9 +2,11 @@ use super::{
     errors::PyValueError, query_crypto_get_account_balance::*, query_file_get_contents::*,
     query_get_transaction_receipt::*,
 };
+use crate::id::{PyAccountId, PyFileId};
 use hedera::{AccountId, Client, FileId, TransactionId};
 use pyo3::prelude::*;
 use std::rc::Rc;
+use crate::transaction_id::PyTransactionId;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
@@ -25,10 +27,10 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single crypto-currency account.
-    pub fn account(&self, id: &str) -> PyResult<PyPartialAccountMessage> {
+    pub fn account(&self, id: &PyAccountId) -> PyResult<PyPartialAccountMessage> {
         Ok(PyPartialAccountMessage {
             client: Rc::clone(&self.inner),
-            account: id.parse().map_err(PyValueError)?,
+            account: id.inner,
         })
     }
 
@@ -36,10 +38,10 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single transaction.
-    pub fn transaction(&self, id: &str) -> PyResult<PyPartialTransactionMessage> {
+    pub fn transaction(&self, id: &PyTransactionId) -> PyResult<PyPartialTransactionMessage> {
         Ok(PyPartialTransactionMessage {
             client: Rc::clone(&self.inner),
-            transaction: id.parse().map_err(PyValueError)?,
+            transaction: id.inner.clone(),
         })
     }
 
@@ -47,10 +49,10 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single file.
-    pub fn file(&self, id: &str) -> PyResult<PyPartialFileMessage> {
+    pub fn file(&self, id: &PyFileId) -> PyResult<PyPartialFileMessage> {
         Ok(PyPartialFileMessage {
             client: Rc::clone(&self.inner),
-            file: id.parse().map_err(PyValueError)?,
+            file: id.inner,
         })
     }
 }
