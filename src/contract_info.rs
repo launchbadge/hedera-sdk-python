@@ -7,7 +7,7 @@ use pyo3::{
 
 #[pyclass(name = ContractInfo)]
 pub struct PyContractInfo {
-    inner: ContractInfo,
+    pub(crate) inner: ContractInfo,
 }
 
 #[pymethods]
@@ -26,7 +26,11 @@ impl PyContractInfo {
 
     #[getter]
     pub fn admin_key(&self) -> PyResult<Option<PyPublicKey>> {
-        Ok(self.inner.admin_key.map(|key| PyPublicKey { inner: key }))
+        Ok(self
+            .inner
+            .admin_key
+            .clone()
+            .map(|key| PyPublicKey { inner: key }))
     }
 
     pub fn expiration_time(&self, py: Python) -> PyResult<Py<PyDateTime>> {

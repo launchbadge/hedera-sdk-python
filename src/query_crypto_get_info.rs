@@ -1,7 +1,7 @@
 use super::{errors::PyException, timestamp::py_date_time};
 use hedera::{
     query::{Query, QueryCryptoGetInfo},
-    AccountId, AccountInfo, Claim, Client, PublicKey,
+    AccountId, AccountInfo, Claim, Client,
 };
 
 use crate::crypto::PyPublicKey;
