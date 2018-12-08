@@ -11,8 +11,8 @@ pub struct PyTransactionId {
 #[pymethods]
 impl PyTransactionId {
     #[new]
-    pub fn __new__(obj: &PyRawObject, id: &str) -> PyResult<()> {
-        let id = TransactionId::from_str(id).map_err(PyValueError)?;
+    pub fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
+        let id = TransactionId::from_str(s).map_err(PyValueError)?;
         obj.init(|_| Self { inner: id })
     }
 }

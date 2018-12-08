@@ -8,8 +8,8 @@ macro_rules! impl_id {
         #[pymethods]
         impl $pyname {
             #[new]
-            fn __new__(obj: &PyRawObject, string: String) -> PyResult<()> {
-                let id = $rname::from_str(&string).map_err(PyValueError)?;
+            fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
+                let id = $rname::from_str(s).map_err(PyValueError)?;
                 obj.init(|_| Self { inner: id })
             }
         }
