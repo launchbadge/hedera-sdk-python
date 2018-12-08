@@ -6,6 +6,7 @@ use crate::id::{PyAccountId, PyFileId};
 use hedera::{AccountId, Client, FileId, TransactionId};
 use pyo3::prelude::*;
 use std::rc::Rc;
+use crate::transaction_id::PyTransactionId;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
@@ -37,10 +38,10 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single transaction.
-    pub fn transaction(&self, id: &str) -> PyResult<PyPartialTransactionMessage> {
+    pub fn transaction(&self, id: &PyTransactionId) -> PyResult<PyPartialTransactionMessage> {
         Ok(PyPartialTransactionMessage {
             client: Rc::clone(&self.inner),
-            transaction: id.parse().map_err(PyValueError)?,
+            transaction: id.inner.clone(),
         })
     }
 

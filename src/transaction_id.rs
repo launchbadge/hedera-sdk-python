@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 #[pyclass(name = TransactionId)]
 pub struct PyTransactionId {
-    inner: TransactionId,
+    pub(crate) inner: TransactionId,
 }
 
 #[pymethods]
