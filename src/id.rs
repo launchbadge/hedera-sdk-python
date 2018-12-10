@@ -14,6 +14,12 @@ macro_rules! impl_id {
             }
         }
 
+        impl From<$rname> for $pyname {
+            fn from(id: $rname) -> Self {
+                Self { inner: id }
+            }
+        }
+
         def_str!($pyname);
     };
 }

@@ -4,7 +4,7 @@ use hedera::{
     AccountId, AccountInfo, Claim, Client,
 };
 
-use crate::crypto::PyPublicKey;
+use crate::{crypto::PyPublicKey, id::PyAccountId};
 use pyo3::{
     prelude::*,
     types::{PyDateTime, PyDelta},
@@ -59,8 +59,8 @@ impl PyAccountInfo {
     }
 
     #[getter]
-    fn proxy_account_id(&self) -> PyResult<String> {
-        Ok(self.inner.proxy_account_id.to_string())
+    fn proxy_account_id(&self) -> PyResult<Option<PyAccountId>> {
+        Ok(self.inner.proxy_account_id.map(Into::into))
     }
 
     #[getter]

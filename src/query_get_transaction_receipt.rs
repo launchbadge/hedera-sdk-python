@@ -21,10 +21,7 @@ impl PyQueryGetTransactionReceipt {
 #[pymethods]
 impl PyQueryGetTransactionReceipt {
     pub fn get(&mut self) -> PyResult<PyTransactionReceipt> {
-        self.inner
-            .get()
-            .map(|receipt| PyTransactionReceipt { inner: receipt })
-            .map_err(PyException)
+        self.inner.get().map(Into::into).map_err(PyException)
     }
 
     pub fn cost(&mut self) -> PyResult<u64> {
