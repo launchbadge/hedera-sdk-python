@@ -1,6 +1,7 @@
 use super::{
     errors::PyValueError, query_crypto_get_account_balance::*, query_file_get_contents::*,
     query_get_transaction_receipt::*,
+    query_crypto_get_info::*,
 };
 use crate::{
     id::{PyAccountId, PyFileId},
@@ -76,6 +77,13 @@ impl PyPartialAccountMessage {
     /// :py:method:`hedera.PartialAccountMessage.info`.
     pub fn balance(&self) -> PyResult<PyQueryCryptoGetAccountBalance> {
         Ok(PyQueryCryptoGetAccountBalance::new(
+            &self.client,
+            self.account,
+        ))
+    }
+
+    pub fn info(&self) -> PyResult<PyQueryCryptoGetInfo> {
+        Ok(PyQueryCryptoGetInfo::new(
             &self.client,
             self.account,
         ))

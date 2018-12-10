@@ -8,7 +8,7 @@ use pyo3::{prelude::*, types::PyDateTime};
 
 #[pyclass(name = QueryFileGetInfo)]
 pub struct PyQueryFileGetInfo {
-    inner: Query<FileInfo>,
+    inner: Query<QueryFileGetInfo>,
 }
 
 impl PyQueryFileGetInfo {

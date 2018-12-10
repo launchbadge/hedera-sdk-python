@@ -7,7 +7,7 @@ use pyo3::prelude::*;
 
 #[pyclass(name = QueryContractGetBytecode)]
 pub struct PyQueryContractGetBytecode {
-    inner: Query<Vec<u8>>,
+    inner: Query<QueryContractGetBytecode>,
 }
 
 impl PyQueryContractGetBytecode {

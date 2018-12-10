@@ -7,7 +7,7 @@ use pyo3::prelude::*;
 
 #[pyclass(name = QueryFileGetContents)]
 pub struct PyQueryFileGetContents {
-    inner: Query<Vec<u8>>,
+    inner: Query<QueryFileGetContents>,
 }
 
 impl PyQueryFileGetContents {

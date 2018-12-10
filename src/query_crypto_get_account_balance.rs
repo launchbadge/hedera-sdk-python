@@ -7,7 +7,7 @@ use pyo3::prelude::*;
 
 #[pyclass(name = QueryCryptoGetAccountBalance)]
 pub struct PyQueryCryptoGetAccountBalance {
-    inner: Query<u64>,
+    inner: Query<QueryCryptoGetAccountBalance>,
 }
 
 impl PyQueryCryptoGetAccountBalance {

@@ -11,7 +11,7 @@ authors = [
 crate-type = ["cdylib"]
 
 [dependencies]
-hedera = { git = "https://github.com/hashgraph/hedera-sdk-rust", rev = "489b4889ad0e14c3e511a88b5d83bac9c14e6a94" }
+hedera = { git = "https://github.com/hashgraph/hedera-sdk-rust", rev = "94f67b00d2b7509501d336acc5c4cc32108e6bbc" }
 pyo3 = { version = "0.5.2", features = [ "extension-module" ] }
 chrono = "0.4.6"
 

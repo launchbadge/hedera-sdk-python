@@ -3,7 +3,6 @@ use hedera::{
     query::{Query, QueryCryptoGetInfo},
     AccountId, AccountInfo, Claim, Client,
 };
-
 use crate::{crypto::PyPublicKey, id::PyAccountId};
 use pyo3::{
     prelude::*,
@@ -11,8 +10,8 @@ use pyo3::{
 };
 
 #[pyclass(name = QueryCryptoGetInfo)]
-pub(crate) struct PyQueryCryptoGetInfo {
-    inner: Query<AccountInfo>,
+pub struct PyQueryCryptoGetInfo {
+    inner: Query<QueryCryptoGetInfo>,
 }
 
 impl PyQueryCryptoGetInfo {

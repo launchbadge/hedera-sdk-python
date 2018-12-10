@@ -7,7 +7,7 @@ use pyo3::prelude::*;
 
 #[pyclass(name = QueryGetTransactionReceipt)]
 pub struct PyQueryGetTransactionReceipt {
-    inner: Query<TransactionReceipt>,
+    inner: Query<QueryGetTransactionReceipt>,
 }
 
 impl PyQueryGetTransactionReceipt {
