@@ -28,3 +28,9 @@ impl PyTransactionReceipt {
         Ok(self.inner.file_id.as_ref().map(|id| id.to_string()))
     }
 }
+
+impl From<TransactionReceipt> for PyTransactionReceipt {
+    fn from(receipt: TransactionReceipt) -> Self {
+        Self { inner: receipt }
+    }
+}
