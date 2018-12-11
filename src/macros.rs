@@ -17,10 +17,13 @@ macro_rules! def_str {
 }
 
 macro_rules! def_query {
+    // Vec<u8> can be returned to Python directly
     (@into Vec<u8>) => {
         Into::into
     };
 
+    // We pretend there is probably an Into conversion available
+    // And map the Vec over it
     (@into Vec<$ty:ty>) => {
         |values| values.clone().into_iter().map(Into::into).collect()
     };
