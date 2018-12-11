@@ -1,4 +1,4 @@
-#![feature(specialization, transpose_result)]
+#![feature(specialization, type_ascription, transpose_result)]
 #![recursion_limit = "512"]
 #![warn(clippy::pedantic)]
 #![allow(clippy::stutter)]
@@ -19,6 +19,7 @@ mod contract_info;
 mod contract_log_info;
 mod crypto;
 mod duration;
+mod either;
 mod errors;
 mod file_info;
 mod id;
