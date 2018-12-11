@@ -1,6 +1,6 @@
 use super::{
     errors::PyValueError, query_crypto_get_account_balance::*, query_crypto_get_info::*,
-    query_file_get_contents::*, query_get_transaction_receipt::*,
+    query_file_get_contents::*, query_transaction_get_receipt::*,
 };
 use crate::{
     id::{PyAccountId, PyFileId},

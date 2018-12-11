@@ -1,6 +1,7 @@
 use crate::{crypto::PyPublicKey, id::PyAccountId};
 use derive_more::From;
 use hedera::Claim;
+use itertools::Itertools;
 use pyo3::prelude::*;
 
 #[pyclass(name = Claim)]
@@ -23,13 +24,8 @@ impl PyClaim {
 
     #[getter]
     pub fn keys(&self) -> PyResult<Vec<PyPublicKey>> {
-        let keys = self
-            .inner
-            .keys
-            .clone()
-            .into_iter()
-            .map(|key| PyPublicKey { inner: key })
-            .collect();
+        let keys = self.inner.keys.clone().into_iter().map_into().collect();
+
         Ok(keys)
     }
 }

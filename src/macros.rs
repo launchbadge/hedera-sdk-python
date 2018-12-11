@@ -17,6 +17,14 @@ macro_rules! def_str {
 }
 
 macro_rules! def_query {
+    (@ty $ty:ty) => {
+        $ty
+    };
+
+    (@ty $ty:ty => $($tt:tt)*) => {
+        $ty
+    };
+
     // Vec<u8> can be returned to Python directly
     (@into Vec<u8>) => {
         Into::into
@@ -28,11 +36,34 @@ macro_rules! def_query {
         |values| values.clone().into_iter().map(Into::into).collect()
     };
 
+    // We need something super special
+    (@into $ty:ty => $($tt:tt)*) => {
+        $($tt)*
+    };
+
     (@into $ty:ty) => {
         Into::into
     };
 
-    ($query:tt($param:ty) -> $($ty:tt)+) => {
+    // Declare a 1-parameter query
+    (@new $query:tt($param:ty)) => {
+        pub fn new(client: &hedera::Client, _1: $param) -> Self {
+            Self {
+                inner: $query::new(client, _1),
+            }
+        }
+    };
+
+    // Declare a 2-parameter query
+    (@new $query:tt($param1:ty, $param2:ty)) => {
+        pub fn new(client: &hedera::Client, _1: $param1, _2: $param2) -> Self {
+            Self {
+                inner: $query::new(client, _1, _2),
+            }
+        }
+    };
+
+    ($query:tt ( $($param:tt)* ) -> $($ty:tt)+) => {
         mashup! {
             m["py"] = Py $query;
         }
@@ -44,16 +75,12 @@ macro_rules! def_query {
             }
 
             impl "py" {
-                pub fn new(client: &hedera::Client, _1: $param) -> Self {
-                    Self {
-                        inner: $query::new(client, _1),
-                    }
-                }
+                def_query!(@new $query($($param)*));
             }
 
             #[pyo3::prelude::pymethods]
             impl "py" {
-                pub fn get(&mut self) -> pyo3::PyResult<$($ty)+> {
+                pub fn get(&mut self) -> pyo3::PyResult<def_query!(@ty $($ty)+)> {
                     self.inner
                         .get()
                         .map(def_query!(@into $($ty)+))
