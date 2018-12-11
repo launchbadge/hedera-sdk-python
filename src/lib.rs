@@ -28,6 +28,7 @@ mod query_file_get_contents;
 mod query_file_get_info;
 mod query_get_transaction_receipt;
 mod timestamp;
+mod transaction_admin_recover;
 mod transaction_id;
 mod transaction_receipt;
 
@@ -44,6 +45,7 @@ use self::{
     query_file_get_info::PyQueryFileGetInfo,
     query_get_transaction_receipt::PyQueryGetTransactionReceipt,
     timestamp::PyDateTime,
+    transaction_admin_recover::{PyTransactionAdminContractRecover, PyTransactionAdminFileRecover},
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
 };
@@ -70,6 +72,8 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyFileInfo>()?;
     m.add_class::<PyTransactionId>()?;
     m.add_class::<PyTransactionReceipt>()?;
+    m.add_class::<PyTransactionAdminFileRecover>()?;
+    m.add_class::<PyTransactionAdminContractRecover>()?;
 
     Ok(())
 }
