@@ -1,6 +1,4 @@
 use pyo3::{types::PyObjectRef, FromPyObject, PyResult};
-use try_from::TryFrom;
-use failure::Error;
 
 #[derive(Debug)]
 pub enum Either<A, B> {

@@ -1,4 +1,4 @@
-#![feature(specialization)]
+#![feature(specialization, type_ascription)]
 #![recursion_limit = "256"]
 #![warn(clippy::pedantic)]
 #![allow(clippy::stutter)]

@@ -3,14 +3,14 @@ use super::{
     query_file_get_contents::*, query_get_transaction_receipt::*,
 };
 use crate::{
+    either::Either,
     id::{PyAccountId, PyFileId},
     transaction_id::PyTransactionId,
 };
-use hedera::{AccountId, Client, FileId, TransactionId};
-use pyo3::prelude::*;
+use hedera::{AccountId, Client, ContractId, FileId, TransactionId};
+use pyo3::{prelude::*, types::PyObjectRef};
 use std::rc::Rc;
-use crate::either::Either;
-use try_from::TryInto;
+use crate::id::PyContractId;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
@@ -31,10 +31,24 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single crypto-currency account.
-    pub fn account(&self, id: &Either<&str, PyAccountId>) -> PyResult<PyPartialAccountMessage> {
+    pub fn account(&self, id: &PyObjectRef) -> PyResult<PyPartialAccountMessage> {
         Ok(PyPartialAccountMessage {
             client: Rc::clone(&self.inner),
-            account: match id {
+            account: match FromPyObject::extract(id)?: Either<&str, &PyAccountId> {
+                Either::Left(s) => s.parse().map_err(PyValueError)?,
+                Either::Right(id) => id.inner,
+            },
+        })
+    }
+
+    /// contract(self, id: str) -> PartialContractMessage
+    /// --
+    ///
+    /// Access available operations on a single smart contract.
+    pub fn contract(&self, id: &PyObjectRef) -> PyResult<PyPartialContractMessage> {
+        Ok(PyPartialContractMessage {
+            client: Rc::clone(&self.inner),
+            contract: match FromPyObject::extract(id)?: Either<&str, &PyContractId> {
                 Either::Left(s) => s.parse().map_err(PyValueError)?,
                 Either::Right(id) => id.inner,
             },
@@ -45,10 +59,13 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single transaction.
-    pub fn transaction(&self, id: &PyTransactionId) -> PyResult<PyPartialTransactionMessage> {
+    pub fn transaction(&self, id: &PyObjectRef) -> PyResult<PyPartialTransactionMessage> {
         Ok(PyPartialTransactionMessage {
             client: Rc::clone(&self.inner),
-            transaction: id.inner.clone(),
+            transaction: match FromPyObject::extract(id)?: Either<&str, &PyTransactionId> {
+                Either::Left(s) => s.parse().map_err(PyValueError)?,
+                Either::Right(id) => id.inner.clone(),
+            },
         })
     }
 
@@ -56,10 +73,13 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single file.
-    pub fn file(&self, id: &PyFileId) -> PyResult<PyPartialFileMessage> {
+    pub fn file(&self, id: &PyObjectRef) -> PyResult<PyPartialFileMessage> {
         Ok(PyPartialFileMessage {
             client: Rc::clone(&self.inner),
-            file: id.inner,
+            file: match FromPyObject::extract(id)?: Either<&str, &PyFileId> {
+                Either::Left(s) => s.parse().map_err(PyValueError)?,
+                Either::Right(id) => id.inner,
+            },
         })
     }
 }
@@ -112,6 +132,16 @@ impl PyPartialTransactionMessage {
             self.transaction.clone(),
         ))
     }
+}
+
+#[pyclass(name = PartialContractMessage)]
+pub struct PyPartialContractMessage {
+    client: Rc<Client>,
+    contract: ContractId,
+}
+
+#[pymethods]
+impl PyPartialContractMessage {
 }
 
 #[pyclass(name = PartialFileMessage)]
