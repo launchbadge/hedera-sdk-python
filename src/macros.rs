@@ -17,7 +17,19 @@ macro_rules! def_str {
 }
 
 macro_rules! def_query {
-    ($query:tt($param:ty) -> $ty:ty) => {
+    (@into Vec<u8>) => {
+        Into::into
+    };
+
+    (@into Vec<$ty:ty>) => {
+        |values| values.clone().into_iter().map(Into::into).collect()
+    };
+
+    (@into $ty:ty) => {
+        Into::into
+    };
+
+    ($query:tt($param:ty) -> $($ty:tt)+) => {
         mashup! {
             m["py"] = Py $query;
         }
@@ -38,10 +50,10 @@ macro_rules! def_query {
 
             #[pyo3::prelude::pymethods]
             impl "py" {
-                pub fn get(&mut self) -> pyo3::PyResult<$ty> {
+                pub fn get(&mut self) -> pyo3::PyResult<$($ty)+> {
                     self.inner
                         .get()
-                        .map(Into::into)
+                        .map(def_query!(@into $($ty)+))
                         .map_err(crate::errors::PyException)
                 }
 

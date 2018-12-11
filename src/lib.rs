@@ -1,4 +1,4 @@
-#![feature(specialization)]
+#![feature(specialization, transpose_result)]
 #![recursion_limit = "256"]
 #![warn(clippy::pedantic)]
 #![allow(clippy::stutter)]
@@ -14,7 +14,9 @@ mod macros;
 mod account_info;
 mod claim;
 mod client;
+mod contract_function_result;
 mod contract_info;
+mod contract_log_info;
 mod crypto;
 mod duration;
 mod errors;
@@ -22,6 +24,7 @@ mod file_info;
 mod id;
 mod query_contract_get_bytecode;
 mod query_contract_get_info;
+mod query_contract_get_records;
 mod query_crypto_get_account_balance;
 mod query_crypto_get_info;
 mod query_file_get_contents;
@@ -30,12 +33,15 @@ mod query_get_transaction_receipt;
 mod timestamp;
 mod transaction_id;
 mod transaction_receipt;
+mod transaction_record;
 
 use self::{
     account_info::PyAccountInfo,
     claim::PyClaim,
     client::*,
+    contract_function_result::PyContractFunctionResult,
     contract_info::PyContractInfo,
+    contract_log_info::PyContractLogInfo,
     crypto::{PyPublicKey, PySecretKey, PySignature},
     duration::PyDuration,
     file_info::PyFileInfo,
@@ -46,6 +52,7 @@ use self::{
     timestamp::PyDateTime,
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
+    transaction_record::PyTransactionRecord,
 };
 
 use pyo3::prelude::*;

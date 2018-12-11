@@ -1,7 +1,9 @@
+use derive_more::From;
 use hedera::TransactionReceipt;
 use pyo3::prelude::*;
 
 #[pyclass(name = TransactionReceipt)]
+#[derive(From)]
 pub struct PyTransactionReceipt {
     pub(crate) inner: TransactionReceipt,
 }
@@ -26,11 +28,5 @@ impl PyTransactionReceipt {
     #[getter]
     pub fn file_id(&self) -> PyResult<Option<String>> {
         Ok(self.inner.file_id.as_ref().map(|id| id.to_string()))
-    }
-}
-
-impl From<TransactionReceipt> for PyTransactionReceipt {
-    fn from(receipt: TransactionReceipt) -> Self {
-        Self { inner: receipt }
     }
 }
