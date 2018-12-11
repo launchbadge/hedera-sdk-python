@@ -35,6 +35,7 @@ mod query_get_by_key;
 mod query_transaction_get_receipt;
 mod query_transaction_get_record;
 mod timestamp;
+mod transaction_crypto_create;
 mod transaction_id;
 mod transaction_receipt;
 mod transaction_record;
