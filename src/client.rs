@@ -9,6 +9,8 @@ use crate::{
 use hedera::{AccountId, Client, FileId, TransactionId};
 use pyo3::prelude::*;
 use std::rc::Rc;
+use crate::either::Either;
+use try_from::TryInto;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
@@ -29,10 +31,13 @@ impl PyClient {
     /// --
     ///
     /// Access available operations on a single crypto-currency account.
-    pub fn account(&self, id: &PyAccountId) -> PyResult<PyPartialAccountMessage> {
+    pub fn account(&self, id: &Either<&str, PyAccountId>) -> PyResult<PyPartialAccountMessage> {
         Ok(PyPartialAccountMessage {
             client: Rc::clone(&self.inner),
-            account: id.inner,
+            account: match id {
+                Either::Left(s) => s.parse().map_err(PyValueError)?,
+                Either::Right(id) => id.inner,
+            },
         })
     }
 

@@ -17,6 +17,7 @@ mod client;
 mod contract_info;
 mod crypto;
 mod duration;
+mod either;
 mod errors;
 mod file_info;
 mod id;
