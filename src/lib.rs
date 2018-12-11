@@ -92,6 +92,8 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyFileInfo>()?;
     m.add_class::<PyTransactionId>()?;
     m.add_class::<PyTransactionReceipt>()?;
+    m.add_class::<PyTransactionAdminContractDelete>()?;
+    m.add_class::<PyTransactionAdminFileDelete>()?;
     m.add_class::<PyQueryCryptoGetAccountRecords>()?;
     m.add_class::<PyQueryCryptoGetClaim>()?;
     m.add_class::<PyQueryTransactionGetRecord>()?;
