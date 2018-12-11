@@ -24,7 +24,6 @@ macro_rules! impl_id {
     };
 }
 
-// NOTE: this would be in the above macro if it weren't for the pyclass attribute
 #[pyclass(name = AccountId)]
 pub struct PyAccountId {
     pub(crate) inner: AccountId,

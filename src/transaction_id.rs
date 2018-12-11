@@ -1,9 +1,11 @@
 use crate::errors::PyValueError;
+use derive_more::From;
 use hedera::TransactionId;
 use pyo3::prelude::*;
 use std::str::FromStr;
 
 #[pyclass(name = TransactionId)]
+#[derive(From)]
 pub struct PyTransactionId {
     pub(crate) inner: TransactionId,
 }

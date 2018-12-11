@@ -1,8 +1,10 @@
 use super::errors::PyValueError;
+use derive_more::From;
 use hedera::{PublicKey, SecretKey, Signature};
 use pyo3::prelude::*;
 
 #[pyclass(name = PublicKey)]
+#[derive(From)]
 pub struct PyPublicKey {
     pub(crate) inner: PublicKey,
 }
@@ -19,6 +21,7 @@ impl PyPublicKey {
 def_str!(PyPublicKey);
 
 #[pyclass(name = SecretKey)]
+#[derive(From)]
 pub struct PySecretKey {
     pub(crate) inner: SecretKey,
 }
@@ -26,6 +29,7 @@ pub struct PySecretKey {
 def_str!(PySecretKey);
 
 #[pyclass(name = Signature)]
+#[derive(From)]
 pub struct PySignature {
     pub(crate) inner: Signature,
 }

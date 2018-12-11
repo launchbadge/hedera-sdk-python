@@ -14,6 +14,9 @@ crate-type = ["cdylib"]
 hedera = { git = "https://github.com/hashgraph/hedera-sdk-rust", rev = "94f67b00d2b7509501d336acc5c4cc32108e6bbc" }
 pyo3 = { version = "0.5.2", features = [ "extension-module" ] }
 chrono = "0.4.6"
+itertools = "0.8.0"
+derive_more = "0.13.0"
+mashup = "0.1.9"
 
 [profile.release]
 lto = true

@@ -1,11 +1,10 @@
-use crate::{crypto::PyPublicKey, id::PyAccountId, timestamp::py_date_time};
+use crate::{crypto::PyPublicKey, id::PyAccountId};
+use derive_more::From;
 use hedera::ContractInfo;
-use pyo3::{
-    prelude::*,
-    types::{PyDateTime, PyDelta},
-};
+use pyo3::prelude::*;
 
 #[pyclass(name = ContractInfo)]
+#[derive(From)]
 pub struct PyContractInfo {
     pub(crate) inner: ContractInfo,
 }
@@ -33,17 +32,17 @@ impl PyContractInfo {
             .map(|key| PyPublicKey { inner: key }))
     }
 
-    pub fn expiration_time(&self, py: Python) -> PyResult<Py<PyDateTime>> {
-        py_date_time(self.inner.expiration_time, py)
-    }
-
-    pub fn auto_renew_period(&self, py: Python) -> PyResult<Py<PyDelta>> {
-        let renew_period = self.inner.auto_renew_period;
-        let seconds = renew_period.as_secs() as i32;
-        let microseconds = renew_period.subsec_micros() as i32;
-
-        PyDelta::new(py, 0, seconds, microseconds, false)
-    }
+    //    pub fn expiration_time(&self, py: Python) -> PyResult<Py<PyDateTime>> {
+    //        py_date_time(self.inner.expiration_time, py)
+    //    }
+    //
+    //    pub fn auto_renew_period(&self, py: Python) -> PyResult<Py<PyDelta>> {
+    //        let renew_period = self.inner.auto_renew_period;
+    //        let seconds = renew_period.as_secs() as i32;
+    //        let microseconds = renew_period.subsec_micros() as i32;
+    //
+    //        PyDelta::new(py, 0, seconds, microseconds, false)
+    //    }
 
     #[getter]
     pub fn storage(&self) -> PyResult<i64> {

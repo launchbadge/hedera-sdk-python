@@ -1,7 +1,6 @@
 use super::{
-    errors::PyValueError, query_crypto_get_account_balance::*, query_file_get_contents::*,
-    query_get_transaction_receipt::*,
-    query_crypto_get_info::*,
+    errors::PyValueError, query_crypto_get_account_balance::*, query_crypto_get_info::*,
+    query_file_get_contents::*, query_get_transaction_receipt::*,
 };
 use crate::{
     id::{PyAccountId, PyFileId},
@@ -83,10 +82,7 @@ impl PyPartialAccountMessage {
     }
 
     pub fn info(&self) -> PyResult<PyQueryCryptoGetInfo> {
-        Ok(PyQueryCryptoGetInfo::new(
-            &self.client,
-            self.account,
-        ))
+        Ok(PyQueryCryptoGetInfo::new(&self.client, self.account))
     }
 }
 

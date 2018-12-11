@@ -1,30 +1,3 @@
-use super::errors::PyException;
-use hedera::{
-    query::{Query, QueryCryptoGetAccountBalance},
-    AccountId, Client,
-};
-use pyo3::prelude::*;
+use hedera::{query::QueryCryptoGetAccountBalance, AccountId};
 
-#[pyclass(name = QueryCryptoGetAccountBalance)]
-pub struct PyQueryCryptoGetAccountBalance {
-    inner: Query<QueryCryptoGetAccountBalance>,
-}
-
-impl PyQueryCryptoGetAccountBalance {
-    pub(crate) fn new(client: &Client, account: AccountId) -> Self {
-        Self {
-            inner: QueryCryptoGetAccountBalance::new(client, account),
-        }
-    }
-}
-
-#[pymethods]
-impl PyQueryCryptoGetAccountBalance {
-    pub fn get(&mut self) -> PyResult<u64> {
-        self.inner.get().map_err(PyException)
-    }
-
-    pub fn cost(&mut self) -> PyResult<u64> {
-        self.inner.cost().map_err(PyException)
-    }
-}
+def_query!(QueryCryptoGetAccountBalance(AccountId) -> u64);
