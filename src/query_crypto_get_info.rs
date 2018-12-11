@@ -59,8 +59,11 @@ impl PyAccountInfo {
     }
 
     #[getter]
-    fn proxy_account_id(&self) -> PyResult<String> {
-        Ok(self.inner.proxy_account_id.to_string())
+    fn proxy_account_id(&self) -> PyResult<Option<String>> {
+        match self.inner.proxy_account_id {
+            Some(account_id) => Ok(Some(account_id.to_string())),
+            None => Ok(None)
+        }
     }
 
     #[getter]
@@ -100,7 +103,7 @@ impl PyAccountInfo {
 
 
     fn get_expiration_time(&self, py: Python) -> PyResult<Py<PyDateTime>> {
-        Ok(py_date_time(self.inner.expiration_time, py)?)
+        py_date_time(self.inner.expiration_time, py)
     }
 
 
