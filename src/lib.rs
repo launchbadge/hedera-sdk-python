@@ -6,6 +6,7 @@
 
 mod client;
 mod errors;
+mod query_crypto_get_info;
 mod query_contract_get_bytecode;
 mod query_crypto_get_account_balance;
 mod query_file_get_contents;
