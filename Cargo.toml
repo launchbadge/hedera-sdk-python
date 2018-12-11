@@ -17,6 +17,7 @@ chrono = "0.4.6"
 itertools = "0.8.0"
 derive_more = "0.13.0"
 mashup = "0.1.9"
+try_from = "0.3.2"
 
 [profile.release]
 lto = true

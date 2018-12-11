@@ -1,7 +1,8 @@
-use crate::{crypto::PyPublicKey, id::PyAccountId};
+use crate::{PyAccountId, PyDateTime, PyDuration, PyPublicKey};
 use derive_more::From;
 use hedera::ContractInfo;
 use pyo3::prelude::*;
+use try_from::TryInto;
 
 #[pyclass(name = ContractInfo)]
 #[derive(From)]
@@ -32,17 +33,15 @@ impl PyContractInfo {
             .map(|key| PyPublicKey { inner: key }))
     }
 
-    //    pub fn expiration_time(&self, py: Python) -> PyResult<Py<PyDateTime>> {
-    //        py_date_time(self.inner.expiration_time, py)
-    //    }
-    //
-    //    pub fn auto_renew_period(&self, py: Python) -> PyResult<Py<PyDelta>> {
-    //        let renew_period = self.inner.auto_renew_period;
-    //        let seconds = renew_period.as_secs() as i32;
-    //        let microseconds = renew_period.subsec_micros() as i32;
-    //
-    //        PyDelta::new(py, 0, seconds, microseconds, false)
-    //    }
+    #[getter]
+    fn get_expiration_time(&self) -> PyResult<PyDateTime> {
+        self.inner.expiration_time.try_into()
+    }
+
+    #[getter]
+    fn get_auto_renew_period(&self) -> PyResult<PyDuration> {
+        self.inner.auto_renew_period.try_into()
+    }
 
     #[getter]
     pub fn storage(&self) -> PyResult<i64> {

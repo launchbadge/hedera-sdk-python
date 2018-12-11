@@ -16,6 +16,7 @@ mod claim;
 mod client;
 mod contract_info;
 mod crypto;
+mod duration;
 mod errors;
 mod file_info;
 mod id;
@@ -36,11 +37,13 @@ use self::{
     client::*,
     contract_info::PyContractInfo,
     crypto::{PyPublicKey, PySecretKey, PySignature},
+    duration::PyDuration,
     file_info::PyFileInfo,
     id::{PyAccountId, PyContractId, PyFileId},
     query_crypto_get_account_balance::PyQueryCryptoGetAccountBalance,
     query_file_get_info::PyQueryFileGetInfo,
     query_get_transaction_receipt::PyQueryGetTransactionReceipt,
+    timestamp::PyDateTime,
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
 };

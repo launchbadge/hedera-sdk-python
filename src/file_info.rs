@@ -1,6 +1,8 @@
+use crate::PyDateTime;
 use derive_more::From;
 use hedera::FileInfo;
 use pyo3::prelude::*;
+use try_from::TryInto;
 
 #[pyclass(name = FileInfo)]
 #[derive(From)]
@@ -30,7 +32,8 @@ impl PyFileInfo {
         Ok(self.inner.keys.iter().map(|key| key.to_string()).collect())
     }
 
-    //    pub fn expiration_time(&mut self, py: Python) -> PyResult<Py<PyDateTime>> {
-    //        py_date_time(self.inner.expiration_time, py)
-    //    }
+    #[getter]
+    pub fn expiration_time(&self) -> PyResult<PyDateTime> {
+        self.inner.expiration_time.try_into()
+    }
 }
