@@ -42,8 +42,12 @@ mod transaction_admin_file_delete;
 mod transaction_admin_file_recover;
 mod transaction_contract_call;
 mod transaction_contract_create;
+mod transaction_contract_update;
+mod transaction_crypto_add_claim;
 mod transaction_crypto_create;
 mod transaction_crypto_delete;
+mod transaction_crypto_delete_claim;
+mod transaction_crypto_update;
 mod transaction_file_append;
 mod transaction_file_create;
 mod transaction_file_delete;
@@ -51,9 +55,6 @@ mod transaction_file_update;
 mod transaction_id;
 mod transaction_receipt;
 mod transaction_record;
-mod transaction_crypto_add_claim;
-mod transaction_crypto_delete_claim;
-mod transaction_contract_update;
 
 use self::{
     account_info::PyAccountInfo,
@@ -80,8 +81,12 @@ use self::{
     transaction_admin_file_recover::PyTransactionAdminFileRecover,
     transaction_contract_call::PyTransactionContractCall,
     transaction_contract_create::PyTransactionContractCreate,
+    transaction_contract_update::PyTransactionContractUpdate,
+    transaction_crypto_add_claim::PyTransactionCryptoAddClaim,
     transaction_crypto_create::PyTransactionCryptoCreate,
     transaction_crypto_delete::PyTransactionCryptoDelete,
+    transaction_crypto_delete_claim::PyTransactionCryptoDeleteClaim,
+    transaction_crypto_update::PyTransactionCryptoUpdate,
     transaction_file_append::PyTransactionFileAppend,
     transaction_file_create::PyTransactionFileCreate,
     transaction_file_delete::PyTransactionFileDelete,
@@ -89,9 +94,6 @@ use self::{
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
     transaction_record::PyTransactionRecord,
-    transaction_crypto_add_claim::PyTransactionCryptoAddClaim,
-    transaction_contract_update::PyTransactionContractUpdate,
-    transaction_crypto_delete_claim::PyTransactionCryptoDeleteClaim,
 };
 
 use pyo3::prelude::*;
@@ -134,6 +136,7 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionCryptoAddClaim>()?;
     m.add_class::<PyTransactionCryptoDeleteClaim>()?;
     m.add_class::<PyTransactionContractUpdate>()?;
+    m.add_class::<PyTransactionCryptoUpdate>()?;
 
     Ok(())
 }
