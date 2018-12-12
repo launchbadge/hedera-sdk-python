@@ -147,6 +147,7 @@ macro_rules! def_transaction {
                         .map_err(crate::errors::PyException)
                 }
 
+                #[setter]
                 pub fn operator(&mut self, id: &pyo3::types::PyObjectRef) -> pyo3::PyResult<()> {
                     self.inner.operator(match pyo3::FromPyObject::extract(id)?: crate::either::Either<&str, &crate::PyAccountId> {
                         crate::either::Either::Left(s) => s.parse().map_err(crate::errors::PyValueError)?,
@@ -156,6 +157,7 @@ macro_rules! def_transaction {
                     Ok(())
                 }
 
+                #[setter]
                 pub fn node(&mut self, id: &pyo3::types::PyObjectRef) -> pyo3::PyResult<()> {
                     self.inner.node(match pyo3::FromPyObject::extract(id)?: crate::either::Either<&str, &crate::PyAccountId> {
                         crate::either::Either::Left(s) => s.parse().map_err(crate::errors::PyValueError)?,
@@ -165,17 +167,19 @@ macro_rules! def_transaction {
                     Ok(())
                 }
 
-
+                #[setter]
                 pub fn memo(&mut self, memo: &str) -> pyo3::PyResult<()> {
                     self.inner.memo(memo);
                     Ok(())
                 }
 
+                #[setter]
                 pub fn transaction_fee(&mut self, fee: u64) -> pyo3::PyResult<()> {
                     self.inner.fee(fee);
                     Ok(())
                 }
 
+                #[setter]
                 pub fn generate_record(&mut self, generate: bool) -> pyo3::PyResult<()> {
                     self.inner.generate_record(generate);
                     Ok(())
@@ -187,6 +191,7 @@ macro_rules! def_transaction {
                 }
 
                 $(
+                    #[setter]
                     fn $builder_name(&mut self, _1: $builder_param) -> pyo3::PyResult<()> {
                         self.inner.$builder_name(_1.clone().into());
                         // fixme: RETURN SELF
