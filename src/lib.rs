@@ -114,6 +114,8 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionFileAppend>()?;
     m.add_class::<PyTransactionFileCreate>()?;
     m.add_class::<PyTransactionContractCreate>()?;
+    m.add_class::<PyTransactionAdminContractDelete>()?;
+    m.add_class::<PyTransactionAdminFileDelete>()?;
 
     Ok(())
 }
