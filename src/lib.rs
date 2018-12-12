@@ -42,6 +42,7 @@ mod transaction_crypto_create;
 mod transaction_id;
 mod transaction_receipt;
 mod transaction_record;
+mod transaction_contract_call;
 
 use self::{
     account_info::PyAccountInfo,
@@ -68,6 +69,7 @@ use self::{
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
     transaction_record::PyTransactionRecord,
+    transaction_contract_call::PyTransactionContractCall,
 };
 
 use pyo3::prelude::*;
@@ -98,6 +100,7 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyQueryGetByKey>()?;
     m.add_class::<PyTransactionAdminFileRecover>()?;
     m.add_class::<PyTransactionAdminContractRecover>()?;
+    m.add_class::<PyTransactionContractCall>()?;
 
     Ok(())
 }
