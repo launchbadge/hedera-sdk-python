@@ -33,6 +33,18 @@ impl PySecretKey {
         let key = s.parse().map_err(PyValueError)?;
         obj.init(|_| Self { inner: key })
     }
+
+    #[staticmethod]
+    pub fn generate(password: &str) -> PyResult<(PySecretKey, String)> {
+        let (secret, mnemonic) = SecretKey::generate(password);
+
+        Ok((secret.into(), mnemonic))
+    }
+
+    #[getter]
+    pub fn public(&self) -> PyResult<PyPublicKey> {
+        Ok(self.inner.public().into())
+    }
 }
 
 def_str!(PySecretKey);
