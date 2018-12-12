@@ -51,6 +51,7 @@ mod transaction_file_update;
 mod transaction_id;
 mod transaction_receipt;
 mod transaction_record;
+mod transaction_crypto_add_claim;
 
 use self::{
     account_info::PyAccountInfo,
@@ -86,6 +87,7 @@ use self::{
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
     transaction_record::PyTransactionRecord,
+    transaction_crypto_add_claim::PyTransactionCryptoAddClaim,
 };
 
 use pyo3::prelude::*;
@@ -125,6 +127,7 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionContractCall>()?;
     m.add_class::<PyTransactionFileUpdate>()?;
     m.add_class::<PyTransactionCryptoDelete>()?;
+    m.add_class::<PyTransactionCryptoAddClaim>()?;
 
     Ok(())
 }
