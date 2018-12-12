@@ -3,6 +3,9 @@ use derive_more::From;
 use hedera::TransactionId;
 use pyo3::prelude::*;
 use std::str::FromStr;
+use crate::PyAccountId;
+use crate::PyDateTime;
+use try_from::TryInto;
 
 #[pyclass(name = TransactionId)]
 #[derive(From)]
@@ -16,6 +19,16 @@ impl PyTransactionId {
     pub fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
         let id = TransactionId::from_str(s).map_err(PyValueError)?;
         obj.init(|_| Self { inner: id })
+    }
+
+    #[getter]
+    pub fn account_id(&self) -> PyResult<PyAccountId> {
+        Ok(self.inner.account_id.into())
+    }
+
+    #[getter]
+    pub fn transaction_valid_start(&self) -> PyResult<PyDateTime> {
+        self.inner.transaction_valid_start.try_into()
     }
 }
 
