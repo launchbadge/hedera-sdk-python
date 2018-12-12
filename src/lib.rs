@@ -41,6 +41,7 @@ mod transaction_admin_file_recover;
 mod transaction_crypto_create;
 mod transaction_file_delete;
 mod transaction_file_append;
+mod transaction_file_create;
 mod transaction_id;
 mod transaction_receipt;
 mod transaction_record;
@@ -69,6 +70,7 @@ use self::{
     transaction_crypto_create::PyTransactionCryptoCreate,
     transaction_file_delete::PyTransactionFileDelete,
     transaction_file_append::PyTransactionFileAppend,
+    transaction_file_create::PyTransactionFileCreate,
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
     transaction_record::PyTransactionRecord,
@@ -104,6 +106,7 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionAdminContractRecover>()?;
     m.add_class::<PyTransactionFileDelete>()?;
     m.add_class::<PyTransactionFileAppend>()?;
+    m.add_class::<PyTransactionFileCreate>()?;
 
     Ok(())
 }
