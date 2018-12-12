@@ -42,6 +42,7 @@ mod transaction_crypto_create;
 mod transaction_file_delete;
 mod transaction_file_append;
 mod transaction_file_create;
+mod transaction_contract_create;
 mod transaction_id;
 mod transaction_receipt;
 mod transaction_record;
@@ -74,6 +75,8 @@ use self::{
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
     transaction_record::PyTransactionRecord,
+    transaction_crypto_create::PyTransactionCryptoCreate,
+    transaction_contract_create::PyTransactionContractCreate,
 };
 
 use pyo3::prelude::*;
@@ -107,6 +110,7 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionFileDelete>()?;
     m.add_class::<PyTransactionFileAppend>()?;
     m.add_class::<PyTransactionFileCreate>()?;
+    m.add_class::<PyTransactionContractCreate>()?;
 
     Ok(())
 }
