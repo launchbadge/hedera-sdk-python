@@ -36,6 +36,8 @@ mod query_get_by_key;
 mod query_transaction_get_receipt;
 mod query_transaction_get_record;
 mod timestamp;
+mod transaction_admin_contract_recover;
+mod transaction_admin_file_recover;
 mod transaction_crypto_create;
 mod transaction_id;
 mod transaction_receipt;
@@ -60,10 +62,12 @@ use self::{
     query_transaction_get_receipt::PyQueryGetTransactionReceipt,
     query_transaction_get_record::PyQueryTransactionGetRecord,
     timestamp::PyDateTime,
+    transaction_admin_contract_recover::PyTransactionAdminContractRecover,
+    transaction_admin_file_recover::PyTransactionAdminFileRecover,
+    transaction_crypto_create::PyTransactionCryptoCreate,
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
     transaction_record::PyTransactionRecord,
-    transaction_crypto_create::PyTransactionCryptoCreate,
 };
 
 use pyo3::prelude::*;
@@ -92,6 +96,8 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyQueryCryptoGetClaim>()?;
     m.add_class::<PyQueryTransactionGetRecord>()?;
     m.add_class::<PyQueryGetByKey>()?;
+    m.add_class::<PyTransactionAdminFileRecover>()?;
+    m.add_class::<PyTransactionAdminContractRecover>()?;
 
     Ok(())
 }
