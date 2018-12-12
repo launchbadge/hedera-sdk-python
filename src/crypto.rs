@@ -13,7 +13,7 @@ pub struct PyPublicKey {
 impl PyPublicKey {
     #[new]
     pub fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
-        let key = PublicKey::from_bytes(s).map_err(PyValueError)?;
+        let key = s.parse().map_err(PyValueError)?;
         obj.init(|_| Self { inner: key })
     }
 }
@@ -26,12 +26,30 @@ pub struct PySecretKey {
     pub(crate) inner: SecretKey,
 }
 
+#[pymethods]
+impl PySecretKey {
+    #[new]
+    pub fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
+        let key = s.parse().map_err(PyValueError)?;
+        obj.init(|_| Self { inner: key })
+    }
+}
+
 def_str!(PySecretKey);
 
 #[pyclass(name = Signature)]
 #[derive(From)]
 pub struct PySignature {
     pub(crate) inner: Signature,
+}
+
+#[pymethods]
+impl PySignature {
+    #[new]
+    pub fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
+        let key = s.parse().map_err(PyValueError)?;
+        obj.init(|_| Self { inner: key })
+    }
 }
 
 def_str!(PySignature);

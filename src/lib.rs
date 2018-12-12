@@ -1,5 +1,5 @@
 #![feature(specialization, type_ascription, transpose_result)]
-#![recursion_limit = "512"]
+#![recursion_limit = "1024"]
 #![warn(clippy::pedantic)]
 #![allow(clippy::stutter)]
 // todo: file an issue in pyo3 about this
@@ -63,6 +63,7 @@ use self::{
     transaction_id::PyTransactionId,
     transaction_receipt::PyTransactionReceipt,
     transaction_record::PyTransactionRecord,
+    transaction_crypto_create::PyTransactionCryptoCreate,
 };
 
 use pyo3::prelude::*;

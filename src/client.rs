@@ -4,13 +4,13 @@ use super::{
 };
 use crate::{
     either::Either,
-    id::{PyAccountId, PyFileId},
+    id::{PyAccountId, PyContractId, PyFileId},
     transaction_id::PyTransactionId,
+    PyTransactionCryptoCreate,
 };
 use hedera::{AccountId, Client, ContractId, FileId, TransactionId};
 use pyo3::{prelude::*, types::PyObjectRef};
 use std::rc::Rc;
-use crate::id::PyContractId;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
@@ -25,6 +25,10 @@ impl PyClient {
         obj.init(move |_| Self {
             inner: Rc::new(client),
         })
+    }
+
+    pub fn create_account(&self) -> PyResult<PyTransactionCryptoCreate> {
+        Ok(PyTransactionCryptoCreate::new(&self.inner))
     }
 
     /// account(self, id: str) -> PartialAccountMessage
@@ -141,8 +145,7 @@ pub struct PyPartialContractMessage {
 }
 
 #[pymethods]
-impl PyPartialContractMessage {
-}
+impl PyPartialContractMessage {}
 
 #[pyclass(name = PartialFileMessage)]
 pub struct PyPartialFileMessage {

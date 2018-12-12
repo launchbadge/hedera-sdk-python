@@ -1,5 +1,5 @@
 use crate::PyPublicKey;
-use hedera::transaction::{TransactionCryptoCreate};
+use hedera::transaction::TransactionCryptoCreate;
 
 def_transaction!(TransactionCryptoCreate() {
     fn key(&PyPublicKey);
