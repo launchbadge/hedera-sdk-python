@@ -36,7 +36,9 @@ mod query_get_by_key;
 mod query_transaction_get_receipt;
 mod query_transaction_get_record;
 mod timestamp;
+mod transaction_admin_contract_delete;
 mod transaction_admin_contract_recover;
+mod transaction_admin_file_delete;
 mod transaction_admin_file_recover;
 mod transaction_crypto_create;
 mod transaction_id;
@@ -62,7 +64,9 @@ use self::{
     query_transaction_get_receipt::PyQueryGetTransactionReceipt,
     query_transaction_get_record::PyQueryTransactionGetRecord,
     timestamp::PyDateTime,
+    transaction_admin_contract_delete::PyTransactionAdminContractDelete,
     transaction_admin_contract_recover::PyTransactionAdminContractRecover,
+    transaction_admin_file_delete::PyTransactionAdminFileDelete,
     transaction_admin_file_recover::PyTransactionAdminFileRecover,
     transaction_crypto_create::PyTransactionCryptoCreate,
     transaction_id::PyTransactionId,
