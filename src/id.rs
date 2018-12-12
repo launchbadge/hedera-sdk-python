@@ -2,6 +2,7 @@ use super::errors::PyValueError;
 use hedera::{AccountId, ContractId, FileId};
 use pyo3::prelude::*;
 use std::str::FromStr;
+use derive_more::{From, Into};
 
 macro_rules! impl_id {
     ($pyname:ident, $rname:ident) => {
@@ -14,17 +15,12 @@ macro_rules! impl_id {
             }
         }
 
-        impl From<$rname> for $pyname {
-            fn from(id: $rname) -> Self {
-                Self { inner: id }
-            }
-        }
-
         def_str!($pyname);
     };
 }
 
 #[pyclass(name = AccountId)]
+#[derive(Clone, From, Into)]
 pub struct PyAccountId {
     pub(crate) inner: AccountId,
 }
@@ -32,6 +28,7 @@ pub struct PyAccountId {
 impl_id!(PyAccountId, AccountId);
 
 #[pyclass(name = FileId)]
+#[derive(Clone, From, Into)]
 pub struct PyFileId {
     pub(crate) inner: FileId,
 }
@@ -39,6 +36,7 @@ pub struct PyFileId {
 impl_id!(PyFileId, FileId);
 
 #[pyclass(name = ContractId)]
+#[derive(Clone, From, Into)]
 pub struct PyContractId {
     pub(crate) inner: ContractId,
 }
