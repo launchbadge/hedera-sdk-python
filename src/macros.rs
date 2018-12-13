@@ -123,7 +123,7 @@ macro_rules! def_transaction {
         }
     };
 
-    ($tx:tt ( $($param:tt)* ) { $( fn $builder_name:ident($builder_param:ty); )* }) => {
+    ($tx:tt ( $($param:tt)* ) { $( fn $builder_name:ident($builder_param:ty); )* } $({ $($extra:tt)* })?) => {
         mashup! {
             m["py"] = Py $tx;
         }
@@ -198,6 +198,8 @@ macro_rules! def_transaction {
                         Ok(())
                     }
                 )*
+
+                $($($extra)*)?
             }
         }
     };
