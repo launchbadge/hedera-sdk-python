@@ -6,7 +6,11 @@ use crate::{
     either::Either,
     id::{PyAccountId, PyContractId, PyFileId},
     transaction_id::PyTransactionId,
-    PyTransactionCryptoCreate,
+    PyQueryCryptoGetClaim, PyQueryFileGetInfo, PyQueryTransactionGetRecord,
+    PyTransactionContractCall, PyTransactionContractCreate, PyTransactionContractUpdate,
+    PyTransactionCryptoCreate, PyTransactionCryptoDelete, PyTransactionCryptoDeleteClaim,
+    PyTransactionCryptoTransfer, PyTransactionCryptoUpdate, PyTransactionFileAppend,
+    PyTransactionFileCreate, PyTransactionFileDelete,
 };
 use hedera::{AccountId, Client, ContractId, FileId, TransactionId};
 use pyo3::{prelude::*, types::PyObjectRef};
@@ -28,6 +32,10 @@ impl PyClient {
         })
     }
 
+    pub fn transfer_crypto(&self) -> PyResult<PyTransactionCryptoTransfer> {
+        Ok(PyTransactionCryptoTransfer::new(&self.inner))
+    }
+
     pub fn create_account(&self) -> PyResult<PyTransactionCryptoCreate> {
         Ok(PyTransactionCryptoCreate::new(&self.inner))
     }
@@ -43,6 +51,10 @@ impl PyClient {
         })
     }
 
+    pub fn create_contract(&self) -> PyResult<PyTransactionContractCreate> {
+        Ok(PyTransactionContractCreate::new(&self.inner))
+    }
+
     /// contract(self, id: str) -> PartialContractMessage
     /// --
     ///
@@ -54,15 +66,8 @@ impl PyClient {
         })
     }
 
-    /// transaction(self, id: str) -> PartialTransactionMessage
-    /// --
-    ///
-    /// Access available operations on a single transaction.
-    pub fn transaction(&self, id: &PyObjectRef) -> PyResult<PyPartialTransactionMessage> {
-        Ok(PyPartialTransactionMessage {
-            client: Rc::clone(&self.inner),
-            transaction: (FromPyObject::extract(id)?: Either<&str, &PyTransactionId>).try_into()?,
-        })
+    pub fn create_file(&self) -> PyResult<PyTransactionFileCreate> {
+        Ok(PyTransactionFileCreate::new(&self.inner))
     }
 
     /// file(self, id: str) -> PartialFileMessage
@@ -73,6 +78,17 @@ impl PyClient {
         Ok(PyPartialFileMessage {
             client: Rc::clone(&self.inner),
             file: (FromPyObject::extract(id)?: Either<&str, &PyFileId>).try_into()?,
+        })
+    }
+
+    /// transaction(self, id: str) -> PartialTransactionMessage
+    /// --
+    ///
+    /// Access available operations on a single transaction.
+    pub fn transaction(&self, id: &PyObjectRef) -> PyResult<PyPartialTransactionMessage> {
+        Ok(PyPartialTransactionMessage {
+            client: Rc::clone(&self.inner),
+            transaction: (FromPyObject::extract(id)?: Either<&str, &PyTransactionId>).try_into()?,
         })
     }
 }
@@ -102,16 +118,32 @@ impl PyPartialAccountMessage {
     pub fn info(&self) -> PyResult<PyQueryCryptoGetInfo> {
         Ok(PyQueryCryptoGetInfo::new(&self.client, self.account))
     }
+    pub fn update(&self) -> PyResult<PyTransactionCryptoUpdate> {
+        Ok(PyTransactionCryptoUpdate::new(&self.client, self.account))
+    }
+
+    pub fn delete(&self) -> PyResult<PyTransactionCryptoDelete> {
+        Ok(PyTransactionCryptoDelete::new(&self.client, self.account))
+    }
+
+    pub fn claim(&self, hash: Vec<u8>) -> PyResult<PyPartialAccountClaimMessage> {
+        Ok(PyPartialAccountClaimMessage {
+            client: Rc::clone(&self.client),
+            account: self.account,
+            hash,
+        })
+    }
 }
 
-#[pyclass(name = PartialTransactionMessage)]
-pub struct PyPartialTransactionMessage {
+#[pyclass(name = PartialAccountClaimMessage)]
+pub struct PyPartialAccountClaimMessage {
     client: Rc<Client>,
-    transaction: TransactionId,
+    account: AccountId,
+    hash: Vec<u8>,
 }
 
 #[pymethods]
-impl PyPartialTransactionMessage {
+impl PyPartialAccountClaimMessage {
     /// receipt(self) -> QueryGetTransactionReceipt
     /// --
     ///
@@ -119,11 +151,45 @@ impl PyPartialTransactionMessage {
     ///
     /// Once a transaction reaches consensus, then information about whether it succeeded or
     /// failed will be available until the end of the receipt period (180 seconds).
-    pub fn receipt(&self) -> PyResult<PyQueryGetTransactionReceipt> {
-        Ok(PyQueryGetTransactionReceipt::new(
+    pub fn delete(&self) -> PyResult<PyTransactionCryptoDeleteClaim> {
+        Ok(PyTransactionCryptoDeleteClaim::new(
             &self.client,
-            self.transaction.clone(),
+            self.account,
+            self.hash.clone(),
         ))
+    }
+    pub fn get(&self) -> PyResult<PyQueryCryptoGetClaim> {
+        Ok(PyQueryCryptoGetClaim::new(
+            &self.client,
+            self.account,
+            self.hash.clone(),
+        ))
+    }
+}
+
+#[pyclass(name = PartialFileMessage)]
+pub struct PyPartialFileMessage {
+    client: Rc<Client>,
+    file: FileId,
+}
+
+#[pymethods]
+impl PyPartialFileMessage {
+    pub fn append(&self, contents: Vec<u8>) -> PyResult<PyTransactionFileAppend> {
+        Ok(PyTransactionFileAppend::new(
+            &self.client,
+            self.file,
+            contents,
+        ))
+    }
+    pub fn delete(&self) -> PyResult<PyTransactionFileDelete> {
+        Ok(PyTransactionFileDelete::new(&self.client, self.file))
+    }
+    pub fn info(&self) -> PyResult<PyQueryFileGetInfo> {
+        Ok(PyQueryFileGetInfo::new(&self.client, self.file))
+    }
+    pub fn contents(&self) -> PyResult<PyQueryFileGetContents> {
+        Ok(PyQueryFileGetContents::new(&self.client, self.file))
     }
 }
 
@@ -134,17 +200,41 @@ pub struct PyPartialContractMessage {
 }
 
 #[pymethods]
-impl PyPartialContractMessage {}
+impl PyPartialContractMessage {
+    pub fn call(&self) -> PyResult<PyTransactionContractCall> {
+        Ok(PyTransactionContractCall::new(&self.client, self.contract))
+    }
 
 #[pyclass(name = PartialFileMessage)]
 pub struct PyPartialFileMessage {
+    pub fn update(&self) -> PyResult<PyTransactionContractUpdate> {
+        Ok(PyTransactionContractUpdate::new(
+            &self.client,
+            self.contract,
+        ))
+    }
+}
+
+#[pyclass(name = PartialTransactionMessage)]
+pub struct PyPartialTransactionMessage {
     client: Rc<Client>,
-    file: FileId,
+    transaction: TransactionId,
 }
 
 #[pymethods]
-impl PyPartialFileMessage {
+impl PyPartialTransactionMessage {
     pub fn contents(&self) -> PyResult<PyQueryFileGetContents> {
         Ok(PyQueryFileGetContents::new(&self.client, self.file))
+    pub fn receipt(&self) -> PyResult<PyQueryTransactionGetReceipt> {
+        Ok(PyQueryTransactionGetReceipt::new(
+            &self.client,
+            self.transaction.clone(),
+        ))
+    }
+    pub fn record(&self) -> PyResult<PyQueryTransactionGetRecord> {
+        Ok(PyQueryTransactionGetRecord::new(
+            &self.client,
+            self.transaction.clone(),
+        ))
     }
 }
