@@ -202,3 +202,20 @@ macro_rules! def_transaction {
         }
     };
 }
+
+// implements `TryFrom` from `Either<&str, A> to B, where A is the python wrapper for B.
+// Of course, B must implement `FromStr` and `Clone` (`Copy` implies `Clone`).
+macro_rules! try_from_either {
+    ($py:ty, $id:ty) => {
+        impl try_from::TryFrom<crate::either::Either<&str, &$py>> for $id {
+            type Err = pyo3::PyErr;
+
+            fn try_from(either: crate::either::Either<&str, &$py>) -> std::result::Result<Self, pyo3::PyErr> {
+                match either {
+                    crate::either::Either::Left(s) => s.parse().map_err(crate::errors::PyValueError),
+                    crate::either::Either::Right(id) => Ok(id.inner.clone()),
+                }
+            }
+        }
+    };
+}
