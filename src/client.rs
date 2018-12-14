@@ -50,7 +50,7 @@ impl PyClient {
         Ok(PyTransactionCryptoCreate::new(&self.inner))
     }
 
-    /// account(self, id: str or PyAccountId) -> PartialAccountMessage
+    /// account(self, id: Union[str, AccountId]) -> PartialAccountMessage
     /// --
     ///
     /// Access available operations on a single crypto-currency account.
@@ -71,7 +71,7 @@ impl PyClient {
         Ok(PyTransactionContractCreate::new(&self.inner))
     }
 
-    /// contract(self, id: str) -> PartialContractMessage
+    /// contract(self, id: Union[str, ContractId]) -> PartialContractMessage
     /// --
     ///
     /// Access available operations on a single smart contract.
@@ -93,7 +93,7 @@ impl PyClient {
         Ok(PyTransactionFileCreate::new(&self.inner))
     }
 
-    /// file(self, id: str) -> PartialFileMessage
+    /// file(self, id: Union[str, FileId]) -> PartialFileMessage
     /// --
     ///
     /// Access available operations on a single file.
@@ -104,7 +104,7 @@ impl PyClient {
         })
     }
 
-    /// transaction(self, id: str or AccountId) -> PartialTransactionMessage
+    /// transaction(self, id: Union[str, TransactionId]) -> PartialTransactionMessage
     /// --
     ///
     /// Access available operations on a single transaction.
@@ -170,7 +170,7 @@ impl PyPartialAccountMessage {
         Ok(PyTransactionCryptoDelete::new(&self.client, self.account))
     }
 
-    /// claim(self, hash: Vec<u8>) -> PartialAccountClaimMessage
+    /// claim(self, hash: bytes) -> PartialAccountClaimMessage
     /// --
     ///
     /// Access available operations on the claims of an account.
