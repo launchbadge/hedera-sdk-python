@@ -32,15 +32,25 @@ impl PyClient {
         })
     }
 
+    /// transfer_crypto(self) TransactionCryptoTransfer
+    /// --
+    ///
+    /// Transfer hbar between accounts.
+    ///
+    /// If a transfer fails for any accounts in the transaction, the whole transaction fails.
     pub fn transfer_crypto(&self) -> PyResult<PyTransactionCryptoTransfer> {
         Ok(PyTransactionCryptoTransfer::new(&self.inner))
     }
 
+    /// create_account(self) -> TransactionCryptoCreate
+    /// --
+    ///
+    /// Create a crypto-currency account.
     pub fn create_account(&self) -> PyResult<PyTransactionCryptoCreate> {
         Ok(PyTransactionCryptoCreate::new(&self.inner))
     }
 
-    /// account(self, id: str) -> PartialAccountMessage
+    /// account(self, id: str or PyAccountId) -> PartialAccountMessage
     /// --
     ///
     /// Access available operations on a single crypto-currency account.
@@ -51,6 +61,12 @@ impl PyClient {
         })
     }
 
+    /// create_contract(self) -> TransactionContractCreate
+    /// --
+    ///
+    /// Create a smart contract instance.
+    ///
+    /// The instance will run the bytecode stored in the given file.
     pub fn create_contract(&self) -> PyResult<PyTransactionContractCreate> {
         Ok(PyTransactionContractCreate::new(&self.inner))
     }
@@ -66,6 +82,13 @@ impl PyClient {
         })
     }
 
+    /// create_file(self) -> TransactionFileCreate
+    /// --
+    ///
+    /// Create a file.
+    ///
+    /// The contents of the file to be created may too large, so this may be used in conjunction
+    /// with :py:method:`hedera.PartialFileMessage.append` to create such files.
     pub fn create_file(&self) -> PyResult<PyTransactionFileCreate> {
         Ok(PyTransactionFileCreate::new(&self.inner))
     }
@@ -81,7 +104,7 @@ impl PyClient {
         })
     }
 
-    /// transaction(self, id: str) -> PartialTransactionMessage
+    /// transaction(self, id: str or AccountId) -> PartialTransactionMessage
     /// --
     ///
     /// Access available operations on a single transaction.
@@ -115,17 +138,42 @@ impl PyPartialAccountMessage {
         ))
     }
 
+    /// info(self) -> QueryCryptoGetInfo
+    /// --
+    ///
+    /// Get information about an account.
+    ///
+    /// Information returned includes the balance, but not account records. If only the balance is
+    /// needed, :py:method:`hedera.PartialAccountMessage.balance` is a smaller and faster reply.
     pub fn info(&self) -> PyResult<PyQueryCryptoGetInfo> {
         Ok(PyQueryCryptoGetInfo::new(&self.client, self.account))
     }
+
+    /// update(self) -> TransactionCryptoUpdate
+    /// --
+    ///
+    /// Modify an account.
+    ///
+    /// To change the key, both the old and new key must be used to sign the transaction.
     pub fn update(&self) -> PyResult<PyTransactionCryptoUpdate> {
         Ok(PyTransactionCryptoUpdate::new(&self.client, self.account))
     }
 
+    /// delete(self) -> TransactionCryptoDelete
+    /// --
+    ///
+    /// Mark an account as deleted, transferring current balance to another account.
+    ///
+    /// Transfers into a deleted account will fail, but its expiration date can be extended as
+    /// normal.
     pub fn delete(&self) -> PyResult<PyTransactionCryptoDelete> {
         Ok(PyTransactionCryptoDelete::new(&self.client, self.account))
     }
 
+    /// claim(self, hash: Vec<u8>) -> PartialAccountClaimMessage
+    /// --
+    ///
+    /// Access available operations on the claims of an account.
     pub fn claim(&self, hash: Vec<u8>) -> PyResult<PyPartialAccountClaimMessage> {
         Ok(PyPartialAccountClaimMessage {
             client: Rc::clone(&self.client),
@@ -144,13 +192,13 @@ pub struct PyPartialAccountClaimMessage {
 
 #[pymethods]
 impl PyPartialAccountClaimMessage {
-    /// receipt(self) -> QueryGetTransactionReceipt
+    /// delete(self) -> TransactionCryptoDeleteClaim
     /// --
     ///
-    /// Get the receipt of the transaction.
+    /// Delete a claim attached to an account.
     ///
-    /// Once a transaction reaches consensus, then information about whether it succeeded or
-    /// failed will be available until the end of the receipt period (180 seconds).
+    /// This transaction is valid if signed by all the keys that are used for transfers out of the
+    /// account, or if signed by any of the keys used to attach the claim in the first place.
     pub fn delete(&self) -> PyResult<PyTransactionCryptoDeleteClaim> {
         Ok(PyTransactionCryptoDeleteClaim::new(
             &self.client,
@@ -158,6 +206,11 @@ impl PyPartialAccountClaimMessage {
             self.hash.clone(),
         ))
     }
+
+    /// get(self) -> QueryCryptoGetClaim
+    /// --
+    ///
+    /// Get a single claim attached to an account, if it exists.
     pub fn get(&self) -> PyResult<PyQueryCryptoGetClaim> {
         Ok(PyQueryCryptoGetClaim::new(
             &self.client,
@@ -175,6 +228,13 @@ pub struct PyPartialFileMessage {
 
 #[pymethods]
 impl PyPartialFileMessage {
+    /// append(self, contents) -> TransactionFileAppend
+    /// --
+    ///
+    /// Append the contents to the end of the file.
+    ///
+    /// If a file was too large to create in a single transaction, it can be created with the first
+    /// part of its contents and adding the rest by appending to it as needed with this transaction.
     pub fn append(&self, contents: Vec<u8>) -> PyResult<PyTransactionFileAppend> {
         Ok(PyTransactionFileAppend::new(
             &self.client,
@@ -182,12 +242,32 @@ impl PyPartialFileMessage {
             contents,
         ))
     }
+
+    /// delete(self) -> TransactionFileDelete
+    /// --
+    ///
+    /// Delete a file.
+    ///
+    /// The file will be marked as deleted, having no contents, until the expiration date.
+    /// Then it will disappear.
     pub fn delete(&self) -> PyResult<PyTransactionFileDelete> {
         Ok(PyTransactionFileDelete::new(&self.client, self.file))
     }
+
+    /// info(self) -> QueryFileGetInfo
+    /// --
+    ///
+    /// Get information about a file (excludes contents).
+    ///
+    /// If a file has expired, there will not be any information.
     pub fn info(&self) -> PyResult<PyQueryFileGetInfo> {
         Ok(PyQueryFileGetInfo::new(&self.client, self.file))
     }
+
+    /// contents(self) -> QueryFileGetContents
+    /// --
+    ///
+    /// Get the contents of a file.
     pub fn contents(&self) -> PyResult<PyQueryFileGetContents> {
         Ok(PyQueryFileGetContents::new(&self.client, self.file))
     }
@@ -201,12 +281,23 @@ pub struct PyPartialContractMessage {
 
 #[pymethods]
 impl PyPartialContractMessage {
+    /// call(self) -> TransactionContractCall
+    /// --
+    ///
+    /// Call a function of the given smart contract instance.
+    ///
+    /// It can use the given amount of gas, and any unspent gas will be refunded to the paying
+    /// account.
     pub fn call(&self) -> PyResult<PyTransactionContractCall> {
         Ok(PyTransactionContractCall::new(&self.client, self.contract))
     }
 
-#[pyclass(name = PartialFileMessage)]
-pub struct PyPartialFileMessage {
+    /// update(self) -> TransactionContractUpdate
+    /// --
+    ///
+    /// Modify a smart contract instance.
+    ///
+    /// If the contract had no adminKey from the start only the expiration time can be updated.
     pub fn update(&self) -> PyResult<PyTransactionContractUpdate> {
         Ok(PyTransactionContractUpdate::new(
             &self.client,
@@ -223,14 +314,27 @@ pub struct PyPartialTransactionMessage {
 
 #[pymethods]
 impl PyPartialTransactionMessage {
-    pub fn contents(&self) -> PyResult<PyQueryFileGetContents> {
-        Ok(PyQueryFileGetContents::new(&self.client, self.file))
+    /// receipt(self) -> QueryTransactionGetReceipt
+    /// --
+    ///
+    /// Get the receipt of the transaction.
+    ///
+    /// Once a transaction reaches consensus, then information about whether it succeeded or
+    /// failed will be available until the end of the receipt period (180 seconds).
     pub fn receipt(&self) -> PyResult<PyQueryTransactionGetReceipt> {
         Ok(PyQueryTransactionGetReceipt::new(
             &self.client,
             self.transaction.clone(),
         ))
     }
+
+    /// record(self) -> QueryTransactionGetRecord
+    /// --
+    ///
+    /// Get the record of the transaction.
+    ///
+    /// If a transaction requested a record, then it will be available for one hour, and a state
+    /// proof is available for it.
     pub fn record(&self) -> PyResult<PyQueryTransactionGetRecord> {
         Ok(PyQueryTransactionGetRecord::new(
             &self.client,
