@@ -1,4 +1,4 @@
 use crate::PyTransactionReceipt;
-use hedera::{query::QueryGetTransactionReceipt, TransactionId};
+use hedera::{query::QueryTransactionGetReceipt, TransactionId};
 
-def_query!(QueryGetTransactionReceipt(TransactionId) -> PyTransactionReceipt);
+def_query!(QueryTransactionGetReceipt(TransactionId) -> PyTransactionReceipt);

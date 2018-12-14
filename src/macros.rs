@@ -86,10 +86,6 @@ macro_rules! def_query {
                         .map(def_query!(@into $($ty)+))
                         .map_err(crate::errors::PyException)
                 }
-
-                pub fn cost(&mut self) -> pyo3::PyResult<u64> {
-                    self.inner.cost().map_err(crate::errors::PyException)
-                }
             }
         }
     };
@@ -212,9 +208,13 @@ macro_rules! try_from_either {
         impl try_from::TryFrom<crate::either::Either<&str, &$py>> for $id {
             type Err = pyo3::PyErr;
 
-            fn try_from(either: crate::either::Either<&str, &$py>) -> std::result::Result<Self, pyo3::PyErr> {
+            fn try_from(
+                either: crate::either::Either<&str, &$py>,
+            ) -> std::result::Result<Self, pyo3::PyErr> {
                 match either {
-                    crate::either::Either::Left(s) => s.parse().map_err(crate::errors::PyValueError),
+                    crate::either::Either::Left(s) => {
+                        s.parse().map_err(crate::errors::PyValueError)
+                    }
                     crate::either::Either::Right(id) => Ok(id.inner.clone()),
                 }
             }
