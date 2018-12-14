@@ -11,6 +11,7 @@ use crate::{
 use hedera::{AccountId, Client, ContractId, FileId, TransactionId};
 use pyo3::{prelude::*, types::PyObjectRef};
 use std::rc::Rc;
+use try_from::TryInto;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
@@ -38,10 +39,7 @@ impl PyClient {
     pub fn account(&self, id: &PyObjectRef) -> PyResult<PyPartialAccountMessage> {
         Ok(PyPartialAccountMessage {
             client: Rc::clone(&self.inner),
-            account: match FromPyObject::extract(id)?: Either<&str, &PyAccountId> {
-                Either::Left(s) => s.parse().map_err(PyValueError)?,
-                Either::Right(id) => id.inner,
-            },
+            account: (FromPyObject::extract(id)?: Either<&str, &PyAccountId>).try_into()?,
         })
     }
 
@@ -52,10 +50,7 @@ impl PyClient {
     pub fn contract(&self, id: &PyObjectRef) -> PyResult<PyPartialContractMessage> {
         Ok(PyPartialContractMessage {
             client: Rc::clone(&self.inner),
-            contract: match FromPyObject::extract(id)?: Either<&str, &PyContractId> {
-                Either::Left(s) => s.parse().map_err(PyValueError)?,
-                Either::Right(id) => id.inner,
-            },
+            contract: (FromPyObject::extract(id)?: Either<&str, &PyContractId>).try_into()?,
         })
     }
 
@@ -66,10 +61,7 @@ impl PyClient {
     pub fn transaction(&self, id: &PyObjectRef) -> PyResult<PyPartialTransactionMessage> {
         Ok(PyPartialTransactionMessage {
             client: Rc::clone(&self.inner),
-            transaction: match FromPyObject::extract(id)?: Either<&str, &PyTransactionId> {
-                Either::Left(s) => s.parse().map_err(PyValueError)?,
-                Either::Right(id) => id.inner.clone(),
-            },
+            transaction: (FromPyObject::extract(id)?: Either<&str, &PyTransactionId>).try_into()?,
         })
     }
 
@@ -80,10 +72,7 @@ impl PyClient {
     pub fn file(&self, id: &PyObjectRef) -> PyResult<PyPartialFileMessage> {
         Ok(PyPartialFileMessage {
             client: Rc::clone(&self.inner),
-            file: match FromPyObject::extract(id)?: Either<&str, &PyFileId> {
-                Either::Left(s) => s.parse().map_err(PyValueError)?,
-                Either::Right(id) => id.inner,
-            },
+            file: (FromPyObject::extract(id)?: Either<&str, &PyFileId>).try_into()?,
         })
     }
 }

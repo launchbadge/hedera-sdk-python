@@ -1,3 +1,8 @@
+use crate::{
+    id::{PyAccountId, PyContractId, PyFileId},
+    transaction_id::PyTransactionId,
+};
+use hedera::{AccountId, ContractId, FileId, TransactionId};
 use pyo3::{types::PyObjectRef, FromPyObject, PyResult};
 
 #[derive(Debug)]
@@ -17,3 +22,8 @@ where
             .or_else(|_| B::extract(ob).map(Either::Right))
     }
 }
+
+try_from_either!(PyAccountId, AccountId);
+try_from_either!(PyFileId, FileId);
+try_from_either!(PyContractId, ContractId);
+try_from_either!(PyTransactionId, TransactionId);
