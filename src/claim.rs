@@ -1,11 +1,11 @@
 use crate::{crypto::PyPublicKey, id::PyAccountId};
-use derive_more::From;
+use derive_more::{From, Into};
 use hedera::Claim;
 use itertools::Itertools;
 use pyo3::prelude::*;
 
 #[pyclass(name = Claim)]
-#[derive(From)]
+#[derive(From, Into, Clone)]
 pub struct PyClaim {
     inner: Claim,
 }
