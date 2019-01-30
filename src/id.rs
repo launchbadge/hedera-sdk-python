@@ -11,7 +11,7 @@ macro_rules! impl_id {
             #[new]
             fn __new__(obj: &PyRawObject, s: &str) -> PyResult<()> {
                 let id = $rname::from_str(s).map_err(PyValueError)?;
-                obj.init(|_| Self { inner: id })
+                obj.init(|| Self { inner: id })
             }
         }
 

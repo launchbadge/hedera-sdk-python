@@ -1,4 +1,4 @@
-#![feature(specialization, type_ascription, transpose_result)]
+#![feature(specialization, type_ascription)]
 #![recursion_limit = "1024"]
 #![warn(clippy::pedantic)]
 #![allow(clippy::stutter)]
@@ -105,7 +105,7 @@ use self::{
 
 use pyo3::prelude::*;
 
-#[pymodinit]
+#[pymodule]
 fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     // Client-related types
     m.add_class::<PyClient>()?;

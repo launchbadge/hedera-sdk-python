@@ -27,7 +27,7 @@ impl PyClient {
     #[new]
     pub fn __new__(obj: &PyRawObject, address: &str) -> PyResult<()> {
         let client = Client::new(address).map_err(PyValueError)?;
-        obj.init(move |_| Self {
+        obj.init(move || Self {
             inner: Rc::new(client),
         })
     }
