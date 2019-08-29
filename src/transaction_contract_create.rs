@@ -12,8 +12,6 @@ def_transaction!(TransactionContractCreate() {
 
     fn proxy_account(&PyAccountId);
 
-    fn proxy_fraction(i32);
-
     // TODO: fn auto_renew_period(&PyDuration);
 
     fn constructor_parameters(Vec<u8>);

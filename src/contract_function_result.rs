@@ -1,7 +1,6 @@
 use derive_more::From;
-// fixme: use hedera::ContractFunctionResult;
 use crate::{PyContractId, PyContractLogInfo};
-use hedera::query::ContractFunctionResult;
+use hedera::function_result::ContractFunctionResult;
 use itertools::Itertools;
 use pyo3::prelude::*;
 

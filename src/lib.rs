@@ -12,6 +12,7 @@ extern crate mashup;
 mod macros;
 
 mod account_info;
+mod call_params;
 mod claim;
 mod client;
 mod contract_function_result;
@@ -35,14 +36,12 @@ mod query_file_get_info;
 mod query_get_by_key;
 mod query_transaction_get_receipt;
 mod query_transaction_get_record;
+mod solidity_util;
 mod timestamp;
-mod transaction_admin_contract_delete;
-mod transaction_admin_contract_recover;
-mod transaction_admin_file_delete;
-mod transaction_admin_file_recover;
 mod transaction_contract_call;
 mod transaction_contract_create;
 mod transaction_contract_update;
+mod transaction_contract_delete;
 mod transaction_crypto_add_claim;
 mod transaction_crypto_create;
 mod transaction_crypto_delete;
@@ -61,6 +60,7 @@ use self::{
     account_info::PyAccountInfo,
     claim::PyClaim,
     client::*,
+    call_params::PyCallParams,
     contract_function_result::PyContractFunctionResult,
     contract_info::PyContractInfo,
     contract_log_info::PyContractLogInfo,
@@ -81,13 +81,10 @@ use self::{
     query_transaction_get_receipt::PyQueryTransactionGetReceipt,
     query_transaction_get_record::PyQueryTransactionGetRecord,
     timestamp::PyDateTime,
-    transaction_admin_contract_delete::PyTransactionAdminContractDelete,
-    transaction_admin_contract_recover::PyTransactionAdminContractRecover,
-    transaction_admin_file_delete::PyTransactionAdminFileDelete,
-    transaction_admin_file_recover::PyTransactionAdminFileRecover,
     transaction_contract_call::PyTransactionContractCall,
     transaction_contract_create::PyTransactionContractCreate,
     transaction_contract_update::PyTransactionContractUpdate,
+    transaction_contract_delete::PyTransactionContractDelete,
     transaction_crypto_add_claim::PyTransactionCryptoAddClaim,
     transaction_crypto_create::PyTransactionCryptoCreate,
     transaction_crypto_delete::PyTransactionCryptoDelete,
@@ -104,6 +101,8 @@ use self::{
 };
 
 use pyo3::prelude::*;
+use pyo3::wrap_module;
+use crate::solidity_util::PyInit_solidity_utils;
 
 #[pymodule]
 fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -143,13 +142,10 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyQueryTransactionGetRecord>()?;
 
     // Transaction types
-    m.add_class::<PyTransactionAdminContractDelete>()?;
-    m.add_class::<PyTransactionAdminContractRecover>()?;
-    m.add_class::<PyTransactionAdminFileDelete>()?;
-    m.add_class::<PyTransactionAdminFileRecover>()?;
     m.add_class::<PyTransactionContractCall>()?;
     m.add_class::<PyTransactionContractCreate>()?;
     m.add_class::<PyTransactionContractUpdate>()?;
+    m.add_class::<PyTransactionContractDelete>()?;
     m.add_class::<PyTransactionCryptoAddClaim>()?;
     m.add_class::<PyTransactionCryptoCreate>()?;
     m.add_class::<PyTransactionCryptoDelete>()?;
@@ -160,6 +156,12 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionFileCreate>()?;
     m.add_class::<PyTransactionFileDelete>()?;
     m.add_class::<PyTransactionFileUpdate>()?;
+
+    // Param types
+    m.add_class::<PyCallParams>()?;
+
+    // Sub Modules
+    m.add_wrapped(wrap_module!(solidity_utils))?;
 
     Ok(())
 }
