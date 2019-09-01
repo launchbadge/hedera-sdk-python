@@ -1,6 +1,6 @@
 use hedera::call_params::CallParams;
 use derive_more::From;
-use pyo3::prelude::*;
+use pyo3::{prelude::*, exceptions};
 
 #[pyclass(name = CallParams)]
 #[derive(From)]
@@ -23,6 +23,20 @@ impl PyCallParams {
         })
     }
 
+    fn prep_fixed_bytes(&self, mut param: Vec<u8>, fixed_len: usize) -> PyResult<Vec<u8>> {
+        if fixed_len < param.len() {
+            return Err(exceptions::ValueError::py_err("ILLEGAL ARGUMENT ERROR: Fixed byte len is \
+            less than byte length. Fixed byte length must be greater than the byte length and less \
+            than or equal to 32."))
+        } else if fixed_len > 32 {
+            return Err(exceptions::ValueError::py_err("ILLEGAL ARGUMENT ERROR: Fixed byte length \
+            cannot be greater than 32."))
+        } else if param.len() < fixed_len {
+            for _ in 0..(fixed_len - param.len()) { param.push(0); }
+        }
+        Ok(param)
+    }
+
     pub fn add_string(&mut self, param: String) -> PyResult<()> {
         self.inner.add_string(param);
         Ok(())
@@ -43,7 +57,8 @@ impl PyCallParams {
         Ok(())
     }
 
-    pub fn add_fixed_bytes(&mut self, param: Vec<u8>, fixed_len: usize) -> PyResult<()> {
+    pub fn add_fixed_bytes(&mut self, mut param: Vec<u8>, fixed_len: usize) -> PyResult<()> {
+        param = self.prep_fixed_bytes(param, fixed_len)?;
         self.inner.add_fixed_bytes(param, fixed_len);
         Ok(())
     }
@@ -53,8 +68,11 @@ impl PyCallParams {
         Ok(())
     }
 
-    pub fn add_fixed_byte_array(&mut self, param: Vec<Vec<u8>>, byte_len: usize) -> PyResult<()> {
-        self.inner.add_fixed_byte_array(param, byte_len);
+    pub fn add_fixed_byte_array(&mut self, mut param: Vec<Vec<u8>>, fixed_byte_len: usize) -> PyResult<()> {
+        for i in 0..param.len() {
+            param[i] = self.prep_fixed_bytes(param[i].clone(), fixed_byte_len)?;
+        }
+        self.inner.add_fixed_byte_array(param, fixed_byte_len);
         Ok(())
     }
 
@@ -63,8 +81,11 @@ impl PyCallParams {
         Ok(())
     }
 
-    pub fn add_fixed_byte_fixed_array(&mut self, param: Vec<Vec<u8>>, fixed_byte_len: usize,
+    pub fn add_fixed_byte_fixed_array(&mut self, mut param: Vec<Vec<u8>>, fixed_byte_len: usize,
                                       fixed_len: usize) -> PyResult<()> {
+        for i in 0..param.len() {
+            param[i] = self.prep_fixed_bytes(param[i].clone(), fixed_byte_len)?;
+        }
         self.inner.add_fixed_byte_fixed_array(param, fixed_byte_len, fixed_len);
         Ok(())
     }

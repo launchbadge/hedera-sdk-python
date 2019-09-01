@@ -1,9 +1,10 @@
-use crate::PyPublicKey;
+use crate::{timestamp::PyTimestamp, PyPublicKey};
 use hedera::transaction::TransactionFileCreate;
 
 //  TODO: once DateTime shenanigans are working
-//  `fn expires_at(&PyDateTime);`
+//  `pub fn expires_at(&PyTimestamp);`
 def_transaction!(TransactionFileCreate() {
-    fn key(&PyPublicKey);
-    fn contents(Vec<u8>);
+    pub fn key(&PyPublicKey);
+    pub fn contents(Vec<u8>);
+    pub fn expires_at(&PyTimestamp);
 });

@@ -2,9 +2,9 @@ use crate::{PyAccountId, PyFileId, PyPublicKey};
 use hedera::{transaction::TransactionContractUpdate, ContractId};
 
 def_transaction!(TransactionContractUpdate(ContractId){
-    // TODO: fn expiration_time(DateTime<Utc>);
-    fn admin_key(&PyPublicKey);
-    fn proxy_account(&PyAccountId);
-    // TODO: fn auto_renew_period(Duration);
-    fn file(&PyFileId);
+    // TODO: pub fn expiration_time(DateTime<Utc>);
+    pub fn admin_key(&PyPublicKey);
+    pub fn proxy_account(&PyAccountId);
+    // TODO: pub fn auto_renew_period(Duration);
+    pub fn file(&PyFileId);
 });

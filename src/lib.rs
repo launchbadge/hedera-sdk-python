@@ -25,6 +25,7 @@ mod errors;
 mod file_info;
 mod id;
 mod query_contract_get_bytecode;
+mod query_contract_call;
 mod query_contract_get_info;
 mod query_contract_get_records;
 mod query_crypto_get_account_balance;
@@ -69,6 +70,7 @@ use self::{
     file_info::PyFileInfo,
     id::{PyAccountId, PyContractId, PyFileId},
     query_contract_get_bytecode::PyQueryContractGetBytecode,
+    query_contract_call::PyQueryContractCall,
     query_contract_get_info::PyQueryContractGetInfo,
     query_contract_get_records::PyQueryContractGetRecords,
     query_crypto_get_account_balance::PyQueryCryptoGetAccountBalance,
@@ -80,7 +82,7 @@ use self::{
     query_get_by_key::PyQueryGetByKey,
     query_transaction_get_receipt::PyQueryTransactionGetReceipt,
     query_transaction_get_record::PyQueryTransactionGetRecord,
-    timestamp::PyDateTime,
+    timestamp::PyTimestamp,
     transaction_contract_call::PyTransactionContractCall,
     transaction_contract_create::PyTransactionContractCreate,
     transaction_contract_update::PyTransactionContractUpdate,
@@ -126,9 +128,11 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PySignature>()?;
     m.add_class::<PyTransactionId>()?;
     m.add_class::<PyTransactionReceipt>()?;
+    m.add_class::<PyTimestamp>()?;
 
     // Query types
     m.add_class::<PyQueryContractGetBytecode>()?;
+    m.add_class::<PyQueryContractCall>()?;
     m.add_class::<PyQueryContractGetInfo>()?;
     m.add_class::<PyQueryContractGetRecords>()?;
     m.add_class::<PyQueryCryptoGetAccountBalance>()?;

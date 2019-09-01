@@ -2,10 +2,10 @@ use crate::{PyAccountId, PyPublicKey};
 use hedera::{transaction::TransactionCryptoUpdate, AccountId};
 
 def_transaction!(TransactionCryptoUpdate(AccountId) {
-    fn key(&PyPublicKey);
-    fn proxy_account(&PyAccountId);
-    fn send_record_threshold(u64);
-    fn receive_record_threshold(u64);
-//    fn auto_renew_period(&PyDuration);
-//    fn expiration_time(&PyDateTime);
+    pub fn key(&PyPublicKey);
+    pub fn proxy_account(&PyAccountId);
+    pub fn send_record_threshold(u64);
+    pub fn receive_record_threshold(u64);
+//    pub fn auto_renew_period(&PyDuration);
+//    pub fn expiration_time(&PyTimestamp);
 });

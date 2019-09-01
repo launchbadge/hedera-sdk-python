@@ -3,5 +3,5 @@ use hedera::transaction::TransactionContractDelete;
 use hedera::ContractId;
 
 def_transaction!(TransactionContractDelete(ContractId) {
-    fn obtainer_account(&PyAccountId);
+    pub fn obtainer_account(&PyAccountId);
 });

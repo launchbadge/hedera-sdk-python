@@ -1,7 +1,7 @@
 use hedera::{transaction::TransactionContractCall, ContractId};
 
 def_transaction!(TransactionContractCall(ContractId) {
-    fn gas(i64);
-    fn amount(i64);
-    fn function_parameters(Vec<u8>);
+    pub fn gas(i64);
+    pub fn amount(i64);
+    pub fn function_parameters(Vec<u8>);
 });

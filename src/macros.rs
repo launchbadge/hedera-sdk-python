@@ -63,6 +63,15 @@ macro_rules! def_query {
         }
     };
 
+    // Declare a 4-parameter query
+    (@new $query:tt($param1:ty, $param2:ty, $param3:ty, $param4:ty)) => {
+        pub fn new(client: &hedera::Client, _1: $param1, _2: $param2, _3: $param3, _4: $param4) -> Self {
+            Self {
+                inner: $query::new(client, _1, _2, _3, _4),
+            }
+        }
+    };
+
     ($query:tt ( $($param:tt)* ) -> $($ty:tt)+) => {
         mashup! {
             m["py"] = Py $query;
@@ -81,6 +90,7 @@ macro_rules! def_query {
             #[pyo3::prelude::pymethods]
             impl "py" {
                 pub fn get(&mut self) -> pyo3::PyResult<def_query!(@ty $($ty)+)> {
+                    println!("[SDK-MACRO] Query Get Called");
                     self.inner
                         .get()
                         .map(def_query!(@into $($ty)+))
@@ -119,7 +129,7 @@ macro_rules! def_transaction {
         }
     };
 
-    ($tx:tt ( $($param:tt)* ) { $( fn $builder_name:ident($builder_param:ty); )* } $({ $($extra:tt)* })?) => {
+    ($tx:tt ( $($param:tt)* ) { $( pub fn $builder_name:ident($builder_param:ty); )* } $({ $($extra:tt)* })?) => {
         mashup! {
             m["py"] = Py $tx;
         }
@@ -187,8 +197,8 @@ macro_rules! def_transaction {
                 }
 
                 $(
-                    #[setter]
-                    fn $builder_name(&mut self, _1: $builder_param) -> pyo3::PyResult<()> {
+                    //#[setter]
+                    pub fn $builder_name(&mut self, _1: $builder_param) -> pyo3::PyResult<()> {
                         self.inner.$builder_name(_1.clone().into());
                         // fixme: RETURN SELF
                         Ok(())
