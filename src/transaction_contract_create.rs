@@ -1,4 +1,4 @@
-use crate::{PyAccountId, PyFileId, PyPublicKey};
+use crate::{PyAccountId, PyFileId, PyPublicKey, PyDuration};
 use hedera::transaction::TransactionContractCreate;
 
 def_transaction!(TransactionContractCreate() {
@@ -12,7 +12,7 @@ def_transaction!(TransactionContractCreate() {
 
     pub fn proxy_account(&PyAccountId);
 
-    // TODO: pub fn auto_renew_period(&PyDuration);
+    pub fn auto_renew_period(&PyDuration);
 
     pub fn constructor_parameters(Vec<u8>);
 });

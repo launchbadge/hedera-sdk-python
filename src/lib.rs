@@ -129,6 +129,7 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionId>()?;
     m.add_class::<PyTransactionReceipt>()?;
     m.add_class::<PyTimestamp>()?;
+    m.add_class::<PyDuration>()?;
 
     // Query types
     m.add_class::<PyQueryContractGetBytecode>()?;
