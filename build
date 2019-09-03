@@ -1,5 +1,38 @@
-#!/bin/sh
+#!/bin/bash
 
-echo "Buidling Hedera-Python SDK..."
-docker build . --tag hedera/pyo3-pack
-docker run --rm -v $(pwd):/io hedera/pyo3-pack build --release
+pck=$(command -v pyo3-pack)
+
+if [[ "${pck}" == "" ]]; then
+  read -p "PY03-Pack not found. Install PY03-Pack? [Y/n] " pyo
+  if [[ "${pyo}" == "Y" ]]; then
+    pip install pyo3-pack
+  fi
+fi
+
+pyo3-pack build
+
+echo -e "\n"
+read -p "Hedera SDK Built Successfully. Install Hedera SDK? [Y/n] " install
+
+if [[ "${install}" != "Y" ]]; then
+  exit
+fi
+
+declare -a build_files
+
+count=0
+echo -e "\nBuild Files\n"
+for entry in ./target/wheels/*
+do
+  echo "[${count}] $entry"
+  build_files[count]=$entry
+  count=$((count+1))
+done
+
+read -p "Select Build File To Install: " index
+echo -e "\n"
+
+echo "Selected: ${build_files[$index]}"
+
+echo "Installing..."
+pip install --force-reinstall ${build_files[$index]}

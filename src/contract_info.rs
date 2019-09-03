@@ -1,4 +1,4 @@
-use crate::{PyAccountId, PyDateTime, PyDuration, PyPublicKey};
+use crate::{PyAccountId, PyTimestamp, PyDuration, PyPublicKey};
 use derive_more::From;
 use hedera::ContractInfo;
 use pyo3::prelude::*;
@@ -34,7 +34,7 @@ impl PyContractInfo {
     }
 
     #[getter]
-    fn get_expiration_time(&self) -> PyResult<PyDateTime> {
+    fn get_expiration_time(&self) -> PyResult<PyTimestamp> {
         self.inner.expiration_time.try_into()
     }
 

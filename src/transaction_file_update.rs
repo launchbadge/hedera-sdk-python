@@ -1,8 +1,8 @@
-use crate::PyPublicKey;
+use crate::{PyPublicKey, PyTimestamp};
 use hedera::{transaction::TransactionFileUpdate, FileId};
 
 def_transaction!(TransactionFileUpdate(FileId) {
-//  fn expires_at(PyDateTime);
-    fn key(&PyPublicKey);
-    fn contents(Vec<u8>);
+    pub fn expires_at(&PyTimestamp);
+    pub fn key(&PyPublicKey);
+    pub fn contents(Vec<u8>);
 });

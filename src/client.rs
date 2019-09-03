@@ -1,16 +1,16 @@
 use super::{
     errors::PyValueError, query_crypto_get_account_balance::*, query_crypto_get_info::*,
-    query_file_get_contents::*, query_transaction_get_receipt::*,
+    query_file_get_contents::*, query_transaction_get_receipt::*
 };
 use crate::{
     either::Either,
     id::{PyAccountId, PyContractId, PyFileId},
-    transaction_id::PyTransactionId,
+    transaction_id::PyTransactionId, PyQueryContractCall,
     PyQueryCryptoGetClaim, PyQueryFileGetInfo, PyQueryTransactionGetRecord,
     PyTransactionContractCall, PyTransactionContractCreate, PyTransactionContractUpdate,
     PyTransactionCryptoCreate, PyTransactionCryptoDelete, PyTransactionCryptoDeleteClaim,
     PyTransactionCryptoTransfer, PyTransactionCryptoUpdate, PyTransactionFileAppend,
-    PyTransactionFileCreate, PyTransactionFileDelete,
+    PyTransactionFileCreate, PyTransactionFileDelete, PySecretKey
 };
 use hedera::{AccountId, Client, ContractId, FileId, TransactionId};
 use pyo3::{prelude::*, types::PyObjectRef};
@@ -19,7 +19,7 @@ use try_from::TryInto;
 
 #[pyclass(name = Client)]
 pub struct PyClient {
-    inner: Rc<Client>,
+    pub inner: Rc<Client>,
 }
 
 #[pymethods]
@@ -30,6 +30,31 @@ impl PyClient {
         obj.init(move || Self {
             inner: Rc::new(client),
         })
+    }
+
+    pub fn set_node(&mut self, node: &PyObjectRef) -> PyResult<()> {
+        let n = (FromPyObject::extract(node)?: Either<&str, &PyAccountId>).try_into()?;
+        match Rc::get_mut(&mut self.inner) {
+            Some(c) => c.set_node(n),
+            None => ()
+        };
+        Ok(())
+    }
+
+    pub fn set_operator(&mut self, operator: &PyObjectRef,
+                        secret: &'static PyObjectRef) -> PyResult<()> {
+        let op = (FromPyObject::extract(operator)?: Either<&str, &PyAccountId>).try_into()?;
+        let sk = FromPyObject::extract(secret)?: &PySecretKey;
+
+        let s = move || {
+            return sk.inner.clone()
+        };
+
+        match Rc::get_mut(&mut self.inner) {
+            Some(c) => c.set_operator(op, s),
+            None => ()
+        }
+        Ok(())
     }
 
     /// transfer_crypto(self) TransactionCryptoTransfer
@@ -290,6 +315,10 @@ impl PyPartialContractMessage {
     /// account.
     pub fn call(&self) -> PyResult<PyTransactionContractCall> {
         Ok(PyTransactionContractCall::new(&self.client, self.contract))
+    }
+
+    pub fn query(&self, gas: i64, params: Vec<u8>, max_result_size: i64) -> PyResult<PyQueryContractCall> {
+        Ok(PyQueryContractCall::new(&self.client, self.contract, gas, params, max_result_size))
     }
 
     /// update(self) -> TransactionContractUpdate
