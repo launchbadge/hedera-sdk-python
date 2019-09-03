@@ -4,14 +4,14 @@ publish = false
 version = "0.1.0-alpha.0"
 edition = "2018"
 authors = [
-    "LaunchBadge <contact@launchbadge.com>"
+    "LaunchBadge <contact@launchbadge.com> (PRIMARY)",
+    "Lonestar Data Technologies <sam@lonestardata.io>"
 ]
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-#hedera = "0.4.1"
 hedera = { path = "/home/user/Development/Dependencies/hedera-sdk-rust" }
 pyo3 = { version = "0.6.0-alpha.1", features = [ "extension-module" ] }
 chrono = "0.4.6"
