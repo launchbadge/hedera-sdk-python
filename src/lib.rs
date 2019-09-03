@@ -38,6 +38,7 @@ mod query_get_by_key;
 mod query_transaction_get_receipt;
 mod query_transaction_get_record;
 mod solidity_util;
+mod status;
 mod timestamp;
 mod transaction_contract_call;
 mod transaction_contract_create;
@@ -82,6 +83,7 @@ use self::{
     query_get_by_key::PyQueryGetByKey,
     query_transaction_get_receipt::PyQueryTransactionGetReceipt,
     query_transaction_get_record::PyQueryTransactionGetRecord,
+    status::PyStatus,
     timestamp::PyTimestamp,
     transaction_contract_call::PyTransactionContractCall,
     transaction_contract_create::PyTransactionContractCreate,
@@ -130,6 +132,7 @@ fn hedera(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<PyTransactionReceipt>()?;
     m.add_class::<PyTimestamp>()?;
     m.add_class::<PyDuration>()?;
+    m.add_class::<PyStatus>()?;
 
     // Query types
     m.add_class::<PyQueryContractGetBytecode>()?;

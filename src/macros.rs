@@ -90,7 +90,6 @@ macro_rules! def_query {
             #[pyo3::prelude::pymethods]
             impl "py" {
                 pub fn get(&mut self) -> pyo3::PyResult<def_query!(@ty $($ty)+)> {
-                    println!("[SDK-MACRO] Query Get Called");
                     self.inner
                         .get()
                         .map(def_query!(@into $($ty)+))
