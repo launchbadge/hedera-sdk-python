@@ -95,33 +95,33 @@ impl PyCallParams {
         Ok(())
     }
 
-    pub fn add_int(&mut self, param: i64, width: usize) -> PyResult<()> {
+    pub fn add_int(&mut self, param: isize, width: usize) -> PyResult<()> {
         self.inner.add_int(param, width);
         Ok(())
     }
 
-    pub fn add_int_array(&mut self, param: Vec<i64>, width: usize) -> PyResult<()> {
+    pub fn add_int_array(&mut self, param: Vec<isize>, width: usize) -> PyResult<()> {
         self.inner.add_int_array(param, width);
         Ok(())
     }
 
-    pub fn add_fixed_int_array(&mut self, param: Vec<i64>, width: usize,
+    pub fn add_fixed_int_array(&mut self, param: Vec<isize>, width: usize,
                                fixed_len: usize) -> PyResult<()> {
         self.inner.add_fixed_int_array(param, width, fixed_len);
         Ok(())
     }
 
-    pub fn add_uint(&mut self, param: u64, width: usize) -> PyResult<()> {
+    pub fn add_uint(&mut self, param: usize, width: usize) -> PyResult<()> {
         self.inner.add_uint(param, width);
         Ok(())
     }
 
-    pub fn add_uint_array(&mut self, param: Vec<u64>, width: usize) -> PyResult<()> {
+    pub fn add_uint_array(&mut self, param: Vec<usize>, width: usize) -> PyResult<()> {
         self.inner.add_uint_array(param, width);
         Ok(())
     }
 
-    pub fn add_fixed_uint_array(&mut self, param: Vec<u64>, width: usize,
+    pub fn add_fixed_uint_array(&mut self, param: Vec<usize>, width: usize,
                                fixed_len: usize) -> PyResult<()> {
         self.inner.add_fixed_uint_array(param, width, fixed_len);
         Ok(())

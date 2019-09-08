@@ -493,7 +493,7 @@ dependencies = [
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "derive_more 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "hedera 0.5.0-alpha.0",
+ "hedera 0.4.2-alpha.0",
  "itertools 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "mashup 0.1.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "pyo3 0.6.0-alpha.1 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -503,7 +503,7 @@ dependencies = [
 
 [[package]]
 name = "hedera"
-version = "0.5.0-alpha.0"
+version = "0.4.2-alpha.0"
 dependencies = [
  "bip39 0.6.0-beta.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
