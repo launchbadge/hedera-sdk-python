@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if ! type cargo > /dev/null; then
+  read -p "Cargo/Rust is not found on this system. Would you like to install? [Y/n] " install_rust
+  if [[ "${install_rust}" == "Y" ]]; then
+    curl https://sh.rustup.rs -sSf | sh
+  fi
+fi
+
 pck=$(command -v pyo3-pack)
 
 if [[ "${pck}" == "" ]]; then
