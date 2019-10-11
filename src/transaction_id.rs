@@ -1,4 +1,4 @@
-use crate::{errors::PyValueError, PyAccountId, PyDateTime};
+use crate::{errors::PyValueError, PyAccountId, PyTimestamp};
 use derive_more::From;
 use hedera::TransactionId;
 use pyo3::prelude::*;
@@ -25,7 +25,7 @@ impl PyTransactionId {
     }
 
     #[getter]
-    pub fn transaction_valid_start(&self) -> PyResult<PyDateTime> {
+    pub fn transaction_valid_start(&self) -> PyResult<PyTimestamp> {
         self.inner.transaction_valid_start.try_into()
     }
 }

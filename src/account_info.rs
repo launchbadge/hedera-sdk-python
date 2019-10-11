@@ -1,4 +1,4 @@
-use crate::{PyAccountId, PyClaim, PyDateTime, PyDuration, PyPublicKey};
+use crate::{PyAccountId, PyClaim, PyTimestamp, PyDuration, PyPublicKey};
 use derive_more::From;
 use hedera::AccountInfo;
 use itertools::Itertools;
@@ -34,11 +34,6 @@ impl PyAccountInfo {
     }
 
     #[getter]
-    pub fn proxy_fraction(&self) -> PyResult<i32> {
-        Ok(self.inner.proxy_fraction as i32)
-    }
-
-    #[getter]
     pub fn proxy_received(&self) -> PyResult<i64> {
         Ok(self.inner.proxy_received as i64)
     }
@@ -69,7 +64,7 @@ impl PyAccountInfo {
     }
 
     #[getter]
-    pub fn expiration_time(&self) -> PyResult<PyDateTime> {
+    pub fn expiration_time(&self) -> PyResult<PyTimestamp> {
         self.inner.expiration_time.try_into()
     }
 

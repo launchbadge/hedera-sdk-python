@@ -1,6 +1,7 @@
 use derive_more::From;
 use hedera::TransactionReceipt;
 use pyo3::prelude::*;
+use crate::PyStatus;
 
 #[pyclass(name = TransactionReceipt)]
 #[derive(From)]
@@ -10,9 +11,10 @@ pub struct PyTransactionReceipt {
 
 #[pymethods]
 impl PyTransactionReceipt {
+
     #[getter]
-    pub fn status(&self) -> PyResult<u8> {
-        Ok(self.inner.status as u8)
+    pub fn status(&self) -> PyResult<PyStatus> {
+        Ok(PyStatus{inner: self.inner.status})
     }
 
     #[getter]
@@ -30,3 +32,5 @@ impl PyTransactionReceipt {
         Ok(self.inner.file_id.as_ref().map(|id| id.to_string()))
     }
 }
+
+def_str!(PyTransactionReceipt);

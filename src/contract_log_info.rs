@@ -1,6 +1,6 @@
 use derive_more::From;
 // fixme: use hedera::ContractLogInfo;
-use hedera::query::ContractLogInfo;
+use hedera::function_result::ContractLogInfo;
 use pyo3::prelude::*;
 
 #[pyclass(name = ContractLogInfo)]

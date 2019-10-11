@@ -1,4 +1,4 @@
-use crate::{id::PyAccountId, PyContractFunctionResult, PyDateTime, PyTransactionReceipt};
+use crate::{id::PyAccountId, PyContractFunctionResult, PyTimestamp, PyTransactionReceipt};
 use derive_more::From;
 use hedera::{TransactionRecord, TransactionRecordBody};
 use pyo3::prelude::*;
@@ -25,7 +25,7 @@ impl PyTransactionRecord {
     }
 
     #[getter]
-    pub fn consensus_timestamp(&self) -> PyResult<Option<PyDateTime>> {
+    pub fn consensus_timestamp(&self) -> PyResult<Option<PyTimestamp>> {
         self.inner
             .consensus_timestamp
             .map(|ts| ts.try_into())
